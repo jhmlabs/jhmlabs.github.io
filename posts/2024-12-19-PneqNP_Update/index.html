@@ -6,8 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="JHM">
+<meta name="dcterms.date" content="2024-12-13">
+<meta name="description" content="Our proof of C.A.Feinstein’s Elegant Argument that P neq NP is equivalent to proving that Guess and Check is the only deterministic algorithm which can decide What Colour Am I Thinking Of?">
 
-<title>jhm labs – jhmlabs</title>
+<title>On C.A. Feinstein’s Elegant Argument that P neq NP – jhmlabs</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,28 +23,46 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./im1.png" rel="icon" type="image/png">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-81b5c3e63835cfde897ecd3d35a35a41.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-299fde5381b5a602aab895950093955a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../im1.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-81b5c3e63835cfde897ecd3d35a35a41.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-299fde5381b5a602aab895950093955a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -69,35 +90,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -129,17 +121,17 @@ window.Quarto = {
 };
 </script>
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">jhmlabs</span>
     </a>
   </div>
@@ -150,7 +142,7 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
@@ -173,235 +165,78 @@ window.Quarto = {
 <!-- content -->
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-page">
-      <h1 class="title">jhm labs</h1>
-                      </div>
+    <div class="quarto-title column-body">
+      <h1 class="title">On C.A. Feinstein’s Elegant Argument that P neq NP</h1>
+                  <div>
+        <div class="description">
+          Our proof of C.A.Feinstein’s Elegant Argument that P neq NP is equivalent to proving that Guess and Check is the only deterministic algorithm which can decide What Colour Am I Thinking Of?
+        </div>
+      </div>
+                </div>
   </div>
     
   
-  <div class="quarto-title-meta column-page">
+  <div class="quarto-title-meta">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>JHM </p>
+            </div>
+    </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">December 13, 2024</p>
+      </div>
+    </div>
     
       
     </div>
     
   
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content quarto-banner-title-block column-page" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
 
+<p>We first read Craig Alan Feinstein’s paper <span class="citation" data-cites="elegant">(<a href="#ref-elegant" role="doc-biblioref">Feinstein 2011</a>)</span> in 2020. His paper was persuasive and indeed elegant, yet we understood that his argument was not completely formal and not entirely mathematical. The critics were somewhat fair in their stubborn dismissal of his argument. Thus we took it upon ourselves to formalize and provide the mathematical foundations for his argument. This work is contained in our preprint <span class="citation" data-cites="jhmPneqNP">(<a href="#ref-jhmPneqNP" role="doc-biblioref">Martel 2024</a>)</span> available here: (On C.A. Feinstein’s Elegant Argument that P neq NP)[www.github.com/jhmartel/PneqNP/].</p>
+<p>The argument is summarized as follows:</p>
+<ol type="1">
+<li>Deciding supports of Borel-Radon measures is the Universal Decision Problem in mathematics.</li>
+<li>Deterministic algorithms are exactly explicit definitions. Nothing more and nothing less.</li>
+<li>“Guess and Check” is the Universal Deterministic Algorithm. <em>“How do you find a needle in a haystack? What colour am I thinking of?”</em></li>
+<li>Computational Complexity and Entropy are the same Quantity.</li>
+<li>Tao-Szemeredi Regularity Lemma <span class="citation" data-cites="ts">(<a href="#ref-ts" role="doc-biblioref">Tao 2005</a>)</span> implies every Deterministic Algorithm is Conditional Guess and Check (“Look here and not there”).</li>
+<li>Zero Subset Sums is a maximally unstructured decision problem according to Tao-Szemeredi Structure Lemma.</li>
+<li>Solving Zero Subset Sums by “guess and check” over exponentially many subsets is the <em>only</em> deterministic algorithm to decide Zero Subset Sums, and therefore <span class="math inline">\(P \neq NP\)</span> <span class="citation" data-cites="p">(<a href="#ref-p" role="doc-biblioref">Cook 2000</a>)</span>.</li>
+</ol>
+<p>These seven propositions contain the crux of C.A. Feinstein’s elegant argument.</p>
 
 
 
 
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="listing-actions-group">
-   <div class="input-group input-group-sm quarto-listing-sort">
-     <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-     <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
-       <option value="" disabled="" selected="" hidden="">Order By</option>
-       <option value="index" data-direction="asc">Default</option>
-         <option value="listing-title" data-direction="asc">
-          Title
-        </option>
-         <option value="listing-date-sort" data-direction="asc">
-          Date - Oldest
-        </option>
-         <option value="listing-date-sort" data-direction="desc">
-          Date - Newest
-        </option>
-         <option value="listing-author" data-direction="asc">
-          Author
-        </option>
-     </select>
-  </div>
-    <div class="input-group input-group-sm quarto-listing-filter">
-      <span class="input-group-text"><i class="bi bi-search"></i></span>
-      <input type="text" class="search form-control" placeholder="Filter">
-    </div>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-p" class="csl-entry" role="listitem">
+Cook, Stephen. 2000. <span>“The p Versus NP Problem.”</span> <em>Clay Mathematics Institute</em> 2: 6.
 </div>
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1734066000000" data-listing-file-modified-sort="1734552157838" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="207">
-<div class="thumbnail">
-<p><a href="./posts/2024-12-19-PneqNP_Update/index.html" class="no-external"></a></p><a href="./posts/2024-12-19-PneqNP_Update/index.html" class="no-external">
-<p><img loading="lazy" src="./posts/2024-12-19-PneqNP_Update/what_colour.png" class="thumbnail-image"></p>
-</a><p><a href="./posts/2024-12-19-PneqNP_Update/index.html" class="no-external"></a></p>
+<div id="ref-elegant" class="csl-entry" role="listitem">
+Feinstein, Craig Alan. 2011. <span>“An Elegant Argument That <span class="math inline">\(P \neq NP\)</span>.”</span> <em>Progress in Physics</em> 2: 30–31.
 </div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/2024-12-19-PneqNP_Update/index.html" class="no-external">On C.A. Feinstein’s Elegant Argument that P neq NP</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/2024-12-19-PneqNP_Update/index.html" class="no-external"></a>
+<div id="ref-jhmPneqNP" class="csl-entry" role="listitem">
+Martel, Justin Harry. 2024. <span>“On c.a.feinstein’s Elegant Argument That p Neq NP.”</span> <a href="https://www.github.com/jhmartel/PneqNP/">www.github.com/jhmartel/PneqNP/</a>.
 </div>
-<div class="listing-description">
-<a href="./posts/2024-12-19-PneqNP_Update/index.html" class="no-external">Our proof of C.A.Feinstein’s Elegant Argument that P neq NP is equivalent to proving that Guess and Check is the only deterministic algorithm which can decide What Colour Am I Thinking Of?</a>
+<div id="ref-ts" class="csl-entry" role="listitem">
+Tao, Terence. 2005. <span>“Szemeredi’s Regularity Lemma Revisited.”</span> <em>arXiv Preprint Math/0504472</em>.
 </div>
-</div>
-<div class="metadata">
-<a href="./posts/2024-12-19-PneqNP_Update/index.html" class="no-external">
-<div class="listing-date">
-Dec 13, 2024
-</div>
-<div class="listing-author">
-JHM
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1733979600000" data-listing-file-modified-sort="1734548521400" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="855">
-<div class="thumbnail">
-<p><a href="./posts/2024-12-18-EffectiveComputeFrontier/index.html" class="no-external"></a></p><a href="./posts/2024-12-18-EffectiveComputeFrontier/index.html" class="no-external">
-<p><img loading="lazy" src="./posts/2024-12-18-EffectiveComputeFrontier/AI_Line.png" class="thumbnail-image"></p>
-</a><p><a href="./posts/2024-12-18-EffectiveComputeFrontier/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/2024-12-18-EffectiveComputeFrontier/index.html" class="no-external">On the Efficient Computing Frontier</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/2024-12-18-EffectiveComputeFrontier/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./posts/2024-12-18-EffectiveComputeFrontier/index.html" class="no-external">There is inherent ontological gap between representations and reality, between images of cats and cats that meow. This gap is independant of computational resources and represents the inherent entropy uncertainty in any given representation.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/2024-12-18-EffectiveComputeFrontier/index.html" class="no-external">
-<div class="listing-date">
-Dec 12, 2024
-</div>
-<div class="listing-author">
-JHM
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-categories="aHlwZXJib2xpYw==" data-listing-date-sort="1717732800000" data-listing-file-modified-sort="1717797638000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="812">
-<div class="thumbnail">
-<p><a href="./posts/2024-06-07-VoronoiModuliSpaces/index.html" class="no-external"></a></p><a href="./posts/2024-06-07-VoronoiModuliSpaces/index.html" class="no-external">
-<p><img loading="lazy" src="./posts/2024-06-07-VoronoiModuliSpaces/mc.png" class="thumbnail-image"></p>
-</a><p><a href="./posts/2024-06-07-VoronoiModuliSpaces/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/2024-06-07-VoronoiModuliSpaces/index.html" class="no-external">On Voronoi’s Projective Model of Hyperbolic Geometry</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/2024-06-07-VoronoiModuliSpaces/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./posts/2024-06-07-VoronoiModuliSpaces/index.html" class="no-external">Voronoi rushed into the room exclaiming, It’s linear, It’s all linear!</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/2024-06-07-VoronoiModuliSpaces/index.html" class="no-external">
-<div class="listing-date">
-Jun 7, 2024
-</div>
-<div class="listing-author">
-JHM
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-categories="c3Rla2xvdiUyQ2xhbmdsYW5kcyUyQ3NlbGJlcmclMkN0cmFjZQ==" data-listing-date-sort="1717646400000" data-listing-file-modified-sort="1717674621000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="418">
-<div class="thumbnail">
-<p><a href="./posts/2024-06-05-SteklovTrace/index.html" class="no-external"></a></p><a href="./posts/2024-06-05-SteklovTrace/index.html" class="no-external">
-<p><img loading="lazy" src="./posts/2024-06-05-SteklovTrace/selberg.png" class="thumbnail-image"></p>
-</a><p><a href="./posts/2024-06-05-SteklovTrace/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/2024-06-05-SteklovTrace/index.html" class="no-external">Idea On Steklov-Selberg Trace Formula for Arithmetic Spaces</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/2024-06-05-SteklovTrace/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./posts/2024-06-05-SteklovTrace/index.html" class="no-external">We have idea about the Steklov spectrum versus the Laplace spectrum on noncompact arithmetic spaces. This suggests a Steklov Selberg trace formula on rational bordifications. Thus we bypass all complications related to continuous versus discrete spectra of Laplacian on noncompact spaces, and immediately obtain discrete spectrum.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/2024-06-05-SteklovTrace/index.html" class="no-external">
-<div class="listing-date">
-Jun 6, 2024
-</div>
-<div class="listing-author">
-JHM
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="4" data-categories="Y29tcGxleGl0eQ==" data-listing-date-sort="1716609600000" data-listing-file-modified-sort="1716636841000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1183">
-<div class="thumbnail">
-<p><a href="./posts/2024-05-23-TaoSzemerediOverfitting/index.html" class="no-external"></a></p><a href="./posts/2024-05-23-TaoSzemerediOverfitting/index.html" class="no-external">
-<p><img loading="lazy" src="./posts/2024-05-23-TaoSzemerediOverfitting/sz.png" class="thumbnail-image"></p>
-</a><p><a href="./posts/2024-05-23-TaoSzemerediOverfitting/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/2024-05-23-TaoSzemerediOverfitting/index.html" class="no-external">Tao-Szemeredi, Significant Bits, and Under-Over Fitting</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/2024-05-23-TaoSzemerediOverfitting/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./posts/2024-05-23-TaoSzemerediOverfitting/index.html" class="no-external">We introduce an idea about Tao-Szemeredi and it’s application to understanding under and over fitting in the training of neural nets. Basically there is a certain entropy dimension which supports the most significant coarse bits. These significant coarse bits are the proper goal of training, whereas the backpropagation gradient step tends to approach then blow past these significant coarse bits during optimization. Under- and over- fitting occurs according to our hypothesis depending on whether the neural net is supported below or above the dimension of the most significant bits. This allows, in our estimate, a priori estimates about the effectiveness of retraining and transferability of neural nets.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/2024-05-23-TaoSzemerediOverfitting/index.html" class="no-external">
-<div class="listing-date">
-May 25, 2024
-</div>
-<div class="listing-author">
-JHM
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="5" data-categories="d2ViZXIlMkNzYW5zYnVyeSUyQ3BoeXNpY3M=" data-listing-date-sort="1716523200000" data-listing-file-modified-sort="1716601790000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1505">
-<div class="thumbnail">
-<p><a href="./posts/2024-05-24-PhysicsCalling/index.html" class="no-external"></a></p><a href="./posts/2024-05-24-PhysicsCalling/index.html" class="no-external">
-<p><img loading="lazy" src="./posts/2024-05-24-PhysicsCalling/r.png" class="thumbnail-image"></p>
-</a><p><a href="./posts/2024-05-24-PhysicsCalling/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/2024-05-24-PhysicsCalling/index.html" class="no-external">Physics is a Calling</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/2024-05-24-PhysicsCalling/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./posts/2024-05-24-PhysicsCalling/index.html" class="no-external">The basic premise at JHMLabs is that Wilhelm Weber’s and Ralph Sansbury’s work synthesizes into a completely unified Classical Physics 2.0 which demonstrates that Bohr’s quantum hypothesis is disposable, and the stability of the atom can be resolved according to classical principles. We wish we only had the opportunity to make our case to Einstein, Rutherford, Planck, Ampere, Weber, Gauss, the masters themselves. </a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/2024-05-24-PhysicsCalling/index.html" class="no-external">
-<div class="listing-date">
-May 24, 2024
-</div>
-<div class="listing-author">
-JHM
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
