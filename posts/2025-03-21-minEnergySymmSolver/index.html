@@ -225,20 +225,15 @@ window.Quarto = {
 
 
 
-<section id="energy-minimizers-symmetric-operators-and-sylvesters-systems-and-lagrange-multipliers" class="level2">
-<h2 class="anchored" data-anchor-id="energy-minimizers-symmetric-operators-and-sylvesters-systems-and-lagrange-multipliers">Energy Minimizers, Symmetric Operators, and Sylvester’s Systems, and Lagrange Multipliers</h2>
+<section id="lagrange-multipliers" class="level2">
+<h2 class="anchored" data-anchor-id="lagrange-multipliers">Lagrange Multipliers</h2>
 <p>We report on some progress on a technical problem which has been delaying our work.</p>
 <p>Given arbitrary vectors <span class="math inline">\(x,y \in {\mathbf{R}}^N\)</span>, we’re looking for a python code to yield the minimal <span class="math inline">\(L^2\)</span>-energy symmetric matrix <span class="math inline">\(A\)</span> which solves the linear equation <span class="math inline">\(Ax=y\)</span>. Thus we study the optimization problem of minimizing <span class="math inline">\(||A||^2\)</span> subject to the linear constraints <span class="math inline">\(Ax=y\)</span> and <span class="math inline">\({}^t A = A\)</span>.</p>
 <p>We introduce the Lagrangian <span class="math display">\[L(A, \lambda, \mu):=\frac{1}{2}{tr}({}^t A A) + {}^t \lambda \cdot (Ax-y)  ~+ \langle\mu, {}^tA -A \rangle, \]</span> where <span class="math inline">\(\lambda\)</span> is <span class="math inline">\(N \times 1\)</span> vector, <span class="math inline">\(\mu\)</span> is <span class="math inline">\(N\times N\)</span> matrix, and <span class="math inline">\(\langle, \rangle\)</span> is scalar-valued dot product between the <span class="math inline">\(N \times N\)</span> matrices. Computing gradients we have <span class="math display">\[\nabla_A L = A + \lambda \cdot {}^t x + \nabla_A \langle \mu, {}^t  A -A \rangle.\]</span> The gradient of the third term <span class="math inline">\(\nabla_A \langle \mu, {} ^t A - A \rangle\)</span> is computed in explicit coordinates with <span class="math inline">\(A=(a_{ij})\)</span>, such that <span class="math display">\[\langle \mu, {}^t A -A \rangle = \sum_{ij} \mu_{ij} (a_{ij}-a_{ji}).\]</span> To compute this gradient, we have <span class="math display">\[\nabla_A \langle \mu, {}^t A - A \rangle = ( \frac{\partial}{\partial a_{kl}} \sum_{ij} \mu_{ij} (a_{ij}-a_{ji}) )_{kl} = (\mu_{kl}-\mu_{lk})_{kl} = \mu - {}^t \mu.\]</span></p>
 <p>Therefore we find <span class="math display">\[\nabla_A L = A + \lambda .{}^t x + \mu - {}^t \mu.\]</span> Moreover we have <span class="math display">\[\nabla_\lambda L = Ax -y = 0\]</span> and <span class="math display">\[\nabla_\mu L = {}^t A - A = 0\]</span> according to the constraints.</p>
-<p>The transpose of <span class="math inline">\(\nabla_A L=0\)</span> yields <span class="math display">\[\lambda = \frac{1}{{}^t xx} (-y - (\mu - {}^t \mu)x ) \]</span> and <span class="math display">\[A  = ({}^t x x)^{-1} [ y.{}^tx + (\mu-{}^t \mu) x .{}^tx ] + {}^t \mu -\mu .\]</span> Thus we find <span class="math inline">\(A\)</span> is a function of <span class="math inline">\({}^t \mu - {}^t \mu\)</span>, and we look to uniquely define <span class="math inline">\(\mu - {}^t \mu\)</span> rather than <span class="math inline">\(\mu\)</span>.</p>
-<p>Obviously <span class="math display">\[{}^tA  = ({}^t x x)^{-1} [ x.{}^ty + x.{}^tx({}^t \mu-\mu) ] + \mu -{}^t \mu .\]</span> The symmetry constraint <span class="math inline">\({}^t A = A\)</span> implies <span class="math display">\[ y.{}^tx -x.{}^t y = (\mu - {}^t \mu)(||x||^2 Id+x.{}^t x) + (||x||^2 Id+x.{}^tx) (\mu - {}^t \mu) .  \]</span></p>
-<p>Now the final question is how to solve for the matrix <span class="math inline">\({}^t \mu - \mu\)</span>?</p>
-<p>In the literature, this type of linear system of the form <span class="math display">\[BX+XB=C\]</span> is known as a “Sylvester equation”, where <span class="math display">\[B:=||x||^2 Id+x.{}^t x\]</span> and <span class="math display">\[C:=y.{}^tx -x.{}^t y\]</span> and <span class="math display">\[X:=\mu - {}^t \mu\]</span> in our setting. Our particular Sylvester equation has a unique solution since the operator <span class="math inline">\(B\)</span> is invertible. Using the SciPy solver, we would write</p>
-<p>X := solve_sylvester(B,B,C)</p>
-<p>Then we construct the operator <span class="math inline">\(A\)</span> by the formula <span class="math display">\[A := (||x||^2)^{-1} [ y.{}^tx + X. x .{}^tx ] - X.\]</span></p>
-<p>By definition <span class="math inline">\(A\)</span> is symmetric, since <span class="math inline">\(X\)</span> solves the necessary Sylvester equation, and is the minimal energy solution solving the original system <span class="math inline">\(Ax=y\)</span>.</p>
-<div id="ef152680-7275-4d4d-b2cc-12f25bbdbb50" class="cell" data-execution_count="7">
+<p>The transpose of <span class="math inline">\(\nabla_A L=0\)</span> yields <span class="math display">\[\lambda = \frac{1}{{}^t xx} (-y - (\mu - {}^t \mu)x ) \]</span> and <span class="math display">\[A  = ({}^t x x)^{-1} [ y.{}^tx + (\mu-{}^t \mu) x .{}^tx ] + {}^t \mu -\mu\]</span> Thus we find <span class="math inline">\(A\)</span> is a function of <span class="math inline">\(X:= {}^t \mu - \mu\)</span>, and we look to uniquely define <span class="math inline">\(X\)</span> rather than <span class="math inline">\(\mu\)</span>. The expression for <span class="math inline">\(A\)</span> becomes <span class="math display">\[A =||x||^{-2}(y.{}^t x - X. x.{}^t x) +X.\]</span> Obviously <span class="math display">\[{}^tA  = ||x||^{-2}(x.{}^ty + x.{}^t x. X ) - X  .\]</span> The symmetry constraint <span class="math inline">\({}^t A = A\)</span> implies <span class="math display">\[ y.{}^tx -x.{}^t y = (x.{}^tx - ||x||^2 Id) X + X (x.{}^tx - ||x||^2 Id).\]</span></p>
+<p>Now the final question is how to solve for the matrix <span class="math inline">\(X\)</span>? In the literature, linear systems of the form <span class="math display">\[BX+XB=C\]</span> are known as Sylvester’s system, where <span class="math display">\[B:=x.{}^t x - ||x||^2 Id\]</span> and <span class="math display">\[C:=y.{}^tx -x.{}^t y\]</span> and <span class="math display">\[X:={}^t \mu - \mu\]</span> in our setting. Using the SciPy solver we would write X := solve_sylvester(B,B,C). Given the Sylvester solution <span class="math inline">\(X\)</span> we obtain the matrix <span class="math inline">\(A\)</span> according to the above formula <span class="math display">\[A =||x||^{-2}(y.{}^t x - X. x.{}^t x) + X.\]</span> It’s important to verify that <span class="math inline">\(A\)</span> is symmetric and solves the linear system <span class="math inline">\(Ax=y\)</span>.</p>
+<div id="97ec8252-f1e6-4958-b383-2f6384991b25" class="cell" data-execution_count="59">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.linalg <span class="im">import</span> solve_sylvester</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -247,51 +242,101 @@ window.Quarto = {
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># returns the minimal energy symmetric NxN matrix A which maps Ax=y</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> minEnergySymmSolve(x,y):</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="bu">len</span>(x[<span class="dv">0</span>])</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">id</span> <span class="op">=</span> np.eye(n)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    scalar1 <span class="op">=</span> np.dot(x,x.T)[<span class="dv">0</span>][<span class="dv">0</span>]</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    matrix1 <span class="op">=</span> np.dot(x.T, x)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    matrix2 <span class="op">=</span> np.dot(scalar1, <span class="bu">id</span>)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    B <span class="op">=</span> matrix1 <span class="op">+</span> matrix2</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    matrix3 <span class="op">=</span> np.dot(y.T, x)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    matrix4 <span class="op">=</span> np.dot(x.T, y)</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    C <span class="op">=</span> matrix3 <span class="op">-</span> matrix4</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Solve for X</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> solve_sylvester(B, B, C)</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    scalar2 <span class="op">=</span> scalar1<span class="op">**-</span><span class="dv">1</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    matrix5 <span class="op">=</span> np.dot(X.T, matrix1)</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    matrix6 <span class="op">=</span> matrix3 <span class="op">+</span> matrix5</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    matrix7 <span class="op">=</span> np.dot(scalar2, matrix6)</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    matrix8 <span class="op">=</span> matrix7 <span class="op">-</span> X</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    A <span class="op">=</span> matrix8</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> A</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> x.T</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> y.T</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="bu">len</span>(x[<span class="dv">0</span>])</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">id</span> <span class="op">=</span> np.eye(n)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    scalar1 <span class="op">=</span> np.dot(x.T,x)[<span class="dv">0</span>][<span class="dv">0</span>]  <span class="co"># tx.x</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    matrix1 <span class="op">=</span> np.dot(x, x.T)  <span class="co"># x.tx</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    matrix2 <span class="op">=</span> np.dot(scalar1, <span class="bu">id</span>)  <span class="co"># ||x||^2 Id</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    B <span class="op">=</span> matrix1 <span class="op">-</span> matrix2  <span class="co"># B = x.tx - |x|^2 Id ... symmetric </span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"B"</span>, B)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"B eigenspectrum"</span>, np.linalg.eig(B))</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    matrix3 <span class="op">=</span> np.dot(y, x.T)  <span class="co"># y.tx</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    matrix4 <span class="op">=</span> np.dot(x, y.T)  <span class="co"># x .ty</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    C <span class="op">=</span> matrix3 <span class="op">-</span> matrix4  <span class="co"># C = y.tx - x.ty ... antisymmetric</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"C"</span>, C)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Solve for X</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> solve_sylvester(B, B, C)  <span class="co"># X is the solution of XB+BX=C ... necessarily antisymmetric.  </span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"X"</span>, X)  <span class="co"># X is not numerically antisymmetric! If we replace X -&gt; (X - tX) /2, then we get an antisymmetric average.</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    scalar2 <span class="op">=</span> scalar1<span class="op">**-</span><span class="dv">1</span>  <span class="co"># inverse square |x|^{-2}</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    matrix5 <span class="op">=</span> np.dot(X, matrix1)  <span class="co"># X.x.tx</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    matrix6 <span class="op">=</span> matrix3 <span class="op">-</span> matrix5  <span class="co"># y.tx - X.x.tx </span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    matrix7 <span class="op">=</span> np.dot(scalar2, matrix6)  <span class="co"># |x|^{-2} (y.tx - X.x.tx)</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    matrix8 <span class="op">=</span> matrix7 <span class="op">+</span> X <span class="co"># final expression A = |x|^{-2}(y.tx - X.x.tx) + X </span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    A <span class="op">=</span> matrix8</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> A</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co"># error above!</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co"># need verify that equality holds Ax=y and A is indeed symmetric.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="d23b001c-7c8b-456f-8385-31ed2c75f133" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array([[<span class="fl">2.0</span>, <span class="fl">3.0</span>, <span class="fl">5.0</span>]])</span>
+<div id="db473bbe-34ae-4f10-b5ee-0df3874269b9" class="cell" data-execution_count="61">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array([[<span class="fl">1.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>]])</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.array([[<span class="op">-</span><span class="fl">1.0</span>, <span class="op">-</span><span class="fl">0.5</span>, <span class="op">-</span><span class="fl">0.2</span>]])</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(minEnergySymmSolve(x,y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> minEnergySymmSolve(x,y)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(np.dot(A,x.T))</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>A1 <span class="op">=</span> (<span class="fl">0.5</span>)<span class="op">*</span>(A <span class="op">+</span> A.T)<span class="op">;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"A1"</span>, A1)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(np.dot(A1, x.T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[[-0.03924284 -0.04132041 -0.05775623]
- [-0.04132041 -0.03566482 -0.0427747 ]
- [-0.05775623 -0.0427747  -0.04351339]]</code></pre>
+<pre><code>B [[ 0. -1. -1.]
+ [-1. -1. -1.]
+ [-1. -1. -1.]]
+B eigenspectrum EigResult(eigenvalues=array([-2.73205081e+00,  7.32050808e-01,  5.27202260e-33]), eigenvectors=array([[ 4.59700843e-01,  8.88073834e-01, -9.23001769e-33],
+       [ 6.27963030e-01, -3.25057584e-01, -7.07106781e-01],
+       [ 6.27963030e-01, -3.25057584e-01,  7.07106781e-01]]))
+C [[ 0.   0.5  0.2]
+ [-0.5  0.   0. ]
+ [-0.2  0.   0. ]]
+X [[ 1.73733865e-17 -2.50000000e-02 -3.25000000e-01]
+ [ 2.50000000e-02 -1.81149229e-18  1.50000000e-01]
+ [ 3.25000000e-01 -1.50000000e-01  1.39305590e-18]]
+[[-1.00000000e+00 -2.50000000e-02 -3.25000000e-01]
+ [-5.00000000e-01 -1.81149229e-18  1.50000000e-01]
+ [-2.00000000e-01 -1.50000000e-01  1.39305590e-18]]
+[[-1. ]
+ [-0.5]
+ [-0.2]]
+A1 [[-1.00000000e+00 -2.62500000e-01 -2.62500000e-01]
+ [-2.62500000e-01 -1.81149229e-18 -1.38777878e-17]
+ [-2.62500000e-01 -1.38777878e-17  1.39305590e-18]]
+[[-1.    ]
+ [-0.2625]
+ [-0.2625]]</code></pre>
 </div>
 </div>
-<div id="23962cea-4a74-4dc8-baaf-ef8b53d53c70" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>x1<span class="op">=</span>np.array([[<span class="fl">1.0</span>, <span class="fl">1.4</span>, <span class="fl">2.5</span>, <span class="fl">5.1</span>]])</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>y1<span class="op">=</span>np.array([[<span class="op">-</span><span class="fl">1.0</span>, <span class="op">-</span><span class="fl">1.0</span>, <span class="op">-</span><span class="fl">1.0</span>, <span class="op">-</span><span class="fl">1.0</span>]])</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(minEnergySymmSolve(x1,y1))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fd7b9cb8-9a20-478d-b479-2bca992e5101" class="cell" data-execution_count="63">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>x1 <span class="op">=</span> np.array([[<span class="fl">1.0</span>, <span class="fl">1.4</span>, <span class="fl">2.4</span>, <span class="fl">5.1</span>]])</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>y1 <span class="op">=</span> np.array([[<span class="op">-</span><span class="fl">1.0</span>, <span class="op">-</span><span class="fl">1.0</span>, <span class="op">-</span><span class="fl">1.0</span>, <span class="op">-</span><span class="fl">1.0</span>]])</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>A1 <span class="op">=</span> minEnergySymmSolve(x1,y1)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[[-0.02161584 -0.02647645 -0.03984312 -0.07143707]
- [-0.02647645 -0.03176701 -0.04631605 -0.08070469]
- [-0.03984312 -0.04631605 -0.0641166  -0.10619063]
- [-0.07143707 -0.08070469 -0.10619063 -0.16643014]]</code></pre>
+<pre><code>B [[-33.73 -33.33 -32.33 -29.63]
+ [-33.33 -32.77 -31.37 -27.59]
+ [-32.33 -31.37 -28.97 -22.49]
+ [-29.63 -27.59 -22.49  -8.72]]
+B eigenspectrum EigResult(eigenvalues=array([-1.16396581e+02,  1.22065810e+01,  3.99523181e-16,  1.69777553e-15]), eigenvectors=array([[ 0.55335326, -0.39563016,  0.27093659,  0.39349219],
+       [ 0.53783721, -0.27151993,  0.33086724,  0.18924356],
+       [ 0.49904708,  0.03875565, -0.8648329 , -0.85685894],
+       [ 0.39431373,  0.87649969,  0.26302906,  0.27412319]]))
+C [[ 0.  -0.4 -1.4 -4.1]
+ [ 0.4  0.  -1.  -3.7]
+ [ 1.4  1.   0.  -2.7]
+ [ 4.1  3.7  2.7  0. ]]
+X [[-0.00561989  0.00807525  0.01616586  0.0380061 ]
+ [-0.00499614 -0.00393207  0.01674317  0.0334558 ]
+ [-0.00331755 -0.01064208 -0.01393557  0.03077456]
+ [-0.04269372 -0.03477186 -0.02185281 -0.00145903]]
+[[-0.04127537 -0.04184241 -0.06940728 -0.14383682]
+ [-0.03955725 -0.05231762 -0.06620348 -0.14280583]
+ [-0.03514273 -0.05519732 -0.090316   -0.13153385]
+ [-0.0671319  -0.06898531 -0.08050444 -0.12609373]]</code></pre>
 </div>
 </div>
 </section>
