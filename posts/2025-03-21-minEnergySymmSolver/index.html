@@ -231,8 +231,8 @@ window.Quarto = {
 <p>Given arbitrary vectors <span class="math inline">\(x,y \in {\mathbf{R}}^N\)</span>, we’re looking for a python code minEnergySymmSolve to yield the minimal <span class="math inline">\(L^2\)</span>-energy symmetric matrix <span class="math inline">\(A\)</span> which solves the linear equation <span class="math inline">\(Ax=y\)</span>. Thus we study the optimization problem of minimizing <span class="math inline">\(||A||^2\)</span> subject to the linear constraints <span class="math inline">\(Ax=y\)</span> and <span class="math inline">\({}^t A = A\)</span>. We introduce the Lagrangian <span class="math display">\[L(A, \lambda, \mu):=\frac{1}{2}{tr}({}^t A A) + {}^t \lambda \cdot (Ax-y)  ~+ \langle\mu, {}^tA -A \rangle, \]</span> where <span class="math inline">\(\lambda\)</span> is <span class="math inline">\(N \times 1\)</span> vector, <span class="math inline">\(\mu\)</span> is <span class="math inline">\(N\times N\)</span> matrix, and <span class="math inline">\(\langle, \rangle\)</span> is scalar-valued dot product between the <span class="math inline">\(N \times N\)</span> matrices. Computing gradients we have <span class="math display">\[\nabla_A L = A + \lambda \cdot {}^t x + \nabla_A \langle \mu, {}^t  A -A \rangle.\]</span> The gradient of the third term <span class="math inline">\(\nabla_A \langle \mu, {} ^t A - A \rangle\)</span> is computed in explicit coordinates with <span class="math inline">\(A=(a_{ij})\)</span>. We find <span class="math display">\[\langle \mu, {}^t A -A \rangle = \sum_{ij} \mu_{ij} (a_{ij}-a_{ji}).\]</span> To compute this gradient, we continue <span class="math display">\[\nabla_A \langle \mu, {}^t A - A \rangle = ( \frac{\partial}{\partial a_{kl}} \sum_{ij} \mu_{ij} (a_{ij}-a_{ji}) )_{kl} = (\mu_{kl}-\mu_{lk})_{kl} = \mu - {}^t \mu.\]</span></p>
 <p>Thus we find <span class="math display">\[\nabla_A L = A + \lambda .{}^t x + \mu - {}^t \mu.\]</span> Moreover we have <span class="math display">\[\nabla_\lambda L = Ax -y = 0\]</span> and <span class="math display">\[\nabla_\mu L = {}^t A - A = 0\]</span> according to the linear constraints.</p>
 <p>Now some algebra. The transpose of <span class="math inline">\(\nabla_A L=0\)</span> yields <span class="math display">\[\lambda = ||x||^{-2} (-y + ({}^t\mu - \mu)x ) \]</span> and <span class="math display">\[A  = ||x||^{-2} y.{}^tx + (\mu^{t} - \mu) (Id - ||x||^{-2} x .{}^tx ).\]</span><br>
-Thus we find <span class="math inline">\(A\)</span> is a function of the antisymmetric matrix <span class="math inline">\(X:= {}^t \mu - \mu\)</span>, and we look to uniquely define <span class="math inline">\(X\)</span> rather than <span class="math inline">\(\mu\)</span>. In this notation <span class="math display">\[A =||x||^{-2}.y.{}^t x + X.(Id -|x|^{-2}.x.{}^tx), \]</span> and we observe that this is the general form of operators satisfying <span class="math inline">\(Ax=y\)</span>.</p>
-<p>The symmetry constraint <span class="math inline">\({}^t A = A\)</span> is equivalent to the following linear system, remembering that <span class="math inline">\(X\)</span> is antisymmetric <span class="math inline">\({}^t X = -X\)</span>. We have <span class="math display">\[{}^tA  = ||x||^{-2}x.{}^ty - (Id - ||x||^{-2}.x.{}^tx).X.\]</span> So <span class="math inline">\({}^t A = A\)</span> if and only if <span class="math display">\[ ||x||^{-2} (x.{}^ty - y.{}^tx) = X.(Id - |x|^{-2}.x.{}^t x) + (Id - |x|^{-2}.x.{}^t x).X .\]</span> This is a Sylvester system of the form <span class="math display">\[BX+XB=C\]</span> where <span class="math display">\[B:=Id - |x|^{-2}.x.{}^t x\]</span> and <span class="math display">\[C:=|x|^{-2}(x.{}^t y-y.{}^t x).\]</span> Using SciPy solver we write X := solve_sylvester(B,B,C). Given the Sylvester solution <span class="math inline">\(X\)</span> we obtain the matrix <span class="math inline">\(A\)</span> according to the previous formula <span class="math display">\[A =||x||^{-2}y.{}^t x + X.(Id- |x|^{-2} x.{}^t x).\]</span> It’s important to verify that <span class="math inline">\(A\)</span> is indeed symmetric and numerically solves the linear system <span class="math inline">\(Ax=y\)</span>.</p>
+Thus we find <span class="math inline">\(A\)</span> is a function of the antisymmetric matrix <span class="math inline">\(X:= {}^t \mu - \mu\)</span>, and we look to uniquely define <span class="math inline">\(X\)</span> rather than <span class="math inline">\(\mu\)</span>. In this notation <span class="math display">\[A =||x||^{-2}.y.{}^t x + X.(Id -||x||^{-2}.x.{}^tx), \]</span> and we observe that this is the general form of operators satisfying <span class="math inline">\(Ax=y\)</span>.</p>
+<p>The symmetry constraint <span class="math inline">\({}^t A = A\)</span> is equivalent to the following linear system, remembering that <span class="math inline">\(X\)</span> is antisymmetric <span class="math inline">\({}^t X = -X\)</span>. We have <span class="math display">\[{}^tA  = ||x||^{-2}x.{}^ty - (Id - ||x||^{-2}.x.{}^tx).X.\]</span> So <span class="math inline">\({}^t A = A\)</span> if and only if <span class="math display">\[ ||x||^{-2} (x.{}^ty - y.{}^tx) = X.(Id - ||x||^{-2}.x.{}^t x) + (Id - ||x||^{-2}.x.{}^t x).X .\]</span> This is a Sylvester system of the form <span class="math display">\[BX+XB=C\]</span> where <span class="math display">\[B:=Id - ||x||^{-2}.x.{}^t x\]</span> and <span class="math display">\[C:=||x||^{-2}(x.{}^t y-y.{}^t x).\]</span> Using SciPy solver we write X := solve_sylvester(B,B,C). Given the Sylvester solution <span class="math inline">\(X\)</span> we obtain the matrix <span class="math inline">\(A\)</span> according to the previous formula <span class="math display">\[A =||x||^{-2}y.{}^t x + X.(Id- ||x||^{-2} x.{}^t x).\]</span> It’s important to verify that <span class="math inline">\(A\)</span> is indeed symmetric and numerically solves the linear system <span class="math inline">\(Ax=y\)</span>.</p>
 <div id="97ec8252-f1e6-4958-b383-2f6384991b25" class="cell" data-execution_count="89">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.linalg <span class="im">import</span> solve_sylvester</span>
@@ -275,34 +275,38 @@ Thus we find <span class="math inline">\(A\)</span> is a function of the antisym
 <span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> A</span>
 <span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="db473bbe-34ae-4f10-b5ee-0df3874269b9" class="cell" data-execution_count="125">
+<div id="db473bbe-34ae-4f10-b5ee-0df3874269b9" class="cell" data-execution_count="137">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x0 <span class="op">=</span> np.array([[<span class="fl">0.7</span>, <span class="fl">0.2</span>, <span class="fl">0.0</span>]])</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>y0 <span class="op">=</span> np.array([[<span class="fl">2.0</span>, <span class="op">-</span><span class="fl">0.4</span>, <span class="fl">0.3</span>]])</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> minEnergySymmSolve(x0,y0)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"A"</span>, A)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"A@tx0"</span>, A<span class="op">@</span>x0.T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"A@x"</span>, A<span class="op">@</span>x0.T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A [[ 2.98042008 -0.43147027  0.39622642]
  [-0.43147027 -0.48985404  0.11320755]
  [ 0.39622642  0.11320755  0.        ]]
-A@tx0 [[ 2. ]
+A@x [[ 2. ]
  [-0.4]
  [ 0.3]]</code></pre>
 </div>
 </div>
-<div id="fd7b9cb8-9a20-478d-b479-2bca992e5101" class="cell" data-execution_count="93">
+<div id="fd7b9cb8-9a20-478d-b479-2bca992e5101" class="cell" data-execution_count="135">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>x1 <span class="op">=</span> np.array([[<span class="fl">1.0</span>, <span class="fl">1.4</span>, <span class="fl">2.4</span>, <span class="fl">5.1</span>]])</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>y1 <span class="op">=</span> np.array([[<span class="op">-</span><span class="fl">1.0</span>, <span class="op">-</span><span class="fl">1.0</span>, <span class="op">-</span><span class="fl">1.0</span>, <span class="op">-</span><span class="fl">1.0</span>]])</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>A1 <span class="op">=</span> minEnergySymmSolve(x1,y1)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"A"</span>, A1)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"A@tx0"</span>, A<span class="op">@</span>x1.T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"A@x"</span>, A1<span class="op">@</span>x1.T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[[-0.04937932 -0.05761363 -0.0781994  -0.13378099]
+<pre><code>A [[-0.04937932 -0.05761363 -0.0781994  -0.13378099]
  [-0.05761363 -0.06453469 -0.08183736 -0.12855454]
  [-0.0781994  -0.08183736 -0.09093224 -0.11548842]
- [-0.13378099 -0.12855454 -0.11548842 -0.08020989]]</code></pre>
+ [-0.13378099 -0.12855454 -0.11548842 -0.08020989]]
+A@x [[-1.]
+ [-1.]
+ [-1.]
+ [-1.]]</code></pre>
 </div>
 </div>
 </section>
