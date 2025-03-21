@@ -275,16 +275,20 @@ Thus we find <span class="math inline">\(A\)</span> is a function of the antisym
 <span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> A</span>
 <span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="db473bbe-34ae-4f10-b5ee-0df3874269b9" class="cell" data-execution_count="91">
+<div id="db473bbe-34ae-4f10-b5ee-0df3874269b9" class="cell" data-execution_count="125">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x0 <span class="op">=</span> np.array([[<span class="fl">0.7</span>, <span class="fl">0.2</span>, <span class="fl">0.0</span>]])</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>y0 <span class="op">=</span> np.array([[<span class="fl">2.0</span>, <span class="op">-</span><span class="fl">0.4</span>, <span class="fl">0.3</span>]])</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> minEnergySymmSolve(x0,y0)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"A"</span>, A)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"A@tx0"</span>, A<span class="op">@</span>x0.T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>A.x0-y0 [[4.4408921e-16]
- [0.0000000e+00]
- [0.0000000e+00]]</code></pre>
+<pre><code>A [[ 2.98042008 -0.43147027  0.39622642]
+ [-0.43147027 -0.48985404  0.11320755]
+ [ 0.39622642  0.11320755  0.        ]]
+A@tx0 [[ 2. ]
+ [-0.4]
+ [ 0.3]]</code></pre>
 </div>
 </div>
 <div id="fd7b9cb8-9a20-478d-b479-2bca992e5101" class="cell" data-execution_count="93">
@@ -292,7 +296,8 @@ Thus we find <span class="math inline">\(A\)</span> is a function of the antisym
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>y1 <span class="op">=</span> np.array([[<span class="op">-</span><span class="fl">1.0</span>, <span class="op">-</span><span class="fl">1.0</span>, <span class="op">-</span><span class="fl">1.0</span>, <span class="op">-</span><span class="fl">1.0</span>]])</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>A1 <span class="op">=</span> minEnergySymmSolve(x1,y1)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"A"</span>, A1)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"A@tx0"</span>, A<span class="op">@</span>x1.T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[-0.04937932 -0.05761363 -0.0781994  -0.13378099]
  [-0.05761363 -0.06453469 -0.08183736 -0.12855454]
