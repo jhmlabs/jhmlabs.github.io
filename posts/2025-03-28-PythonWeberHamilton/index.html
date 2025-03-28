@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.3">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="JHM">
+<meta name="dcterms.date" content="2025-03-28">
+<meta name="description" content="We review python and the Weber Hamilton equations of motion.">
+
+<title>Python Weber Hamilton Computations – jhmlabs</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../im1.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-81b5c3e63835cfde897ecd3d35a35a41.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-299fde5381b5a602aab895950093955a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">jhmlabs</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/_jhmlabs"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Python Weber Hamilton Computations</h1>
+                  <div>
+        <div class="description">
+          We review python and the Weber Hamilton equations of motion.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">algorithm</div>
+                <div class="quarto-category">python</div>
+                <div class="quarto-category">weber</div>
+                <div class="quarto-category">hamilton</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>JHM </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">March 28, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>We have tried to write this article many times. We try again. The goal is write <span class="math inline">\(\texttt{python}\)</span> code simulating the Weber-Hamilton equations of motion for <span class="math inline">\(N\)</span>-body electrodynamic systems This is straightforward for classical Hamiltonians, but requires modification for Weber’s Hamiltonian. This post contains no <span class="math inline">\(\texttt{python}\)</span> code, all of which will be presented in future post. Here we review the theoretical aspects of the Weber <span class="math inline">\(\texttt{python}\)</span> notebooks.</p>
+<p>Key ingredients:</p>
+<ul>
+<li>We construct <span class="math inline">\(H\)</span> in python as the sum over all <span class="math inline">\(2\)</span>-body interactions.</li>
+<li>We compute the numerical gradients of <span class="math inline">\(H\)</span>.</li>
+<li>We use <span class="math inline">\(\texttt{minEnergySymmSolve}\)</span> to define effective inertial mass operators <span class="math inline">\(A\)</span>, although we do have alternative formula <span class="math inline">\(\nabla^2_{vv}H =A\)</span>.</li>
+<li>We review the symplecticity of classical Hamiltonian systems.</li>
+<li>We define <span class="math inline">\(\texttt{WeberKick}\)</span> and <span class="math inline">\(\texttt{WeberDrift}\)</span> updates, and construct <span class="math inline">\(\texttt{WKDK}\)</span> Leapfrog Verlet integrator.</li>
+<li>We review higher-order Trotter-Suzuki approximations, Forest-Ruth coefficients, and Yosida sixth order integrators of WH equations of motion.</li>
+<li>We rescale WH to simulate physical atomic scale.</li>
+</ul>
+<section id="computing-the-numerical-gradients-of-h" class="level2">
+<h2 class="anchored" data-anchor-id="computing-the-numerical-gradients-of-h">Computing the Numerical Gradients of <span class="math inline">\(H\)</span></h2>
+<p>The first problem is python coding the Hamiltonian <span class="math inline">\(H\)</span>. Weber is instantaneous action-at-a-distance. A key hypothesis of Weber electrodynamics is that <span class="math inline">\(N\)</span>-body interactions are determined by the set of all <span class="math inline">\(2\)</span>-body subinteractions. Hence the total gradients of <span class="math inline">\(H\)</span> are computed recursively as sums over all <span class="math inline">\(2\)</span>-body pairs. Thus <span class="math display">\[H=\sum'_{ij} H(p_i, p_j)\]</span> is the sum over all pairs of distinct particles <span class="math inline">\(p_i, p_j\)</span>. In section below we construct the numerical Cartesian gradients <span class="math inline">\(\nabla_{x_i} H(p_i, p_j)\)</span> and <span class="math inline">\(\nabla_{v_i} H(p_i, p_j)\)</span> using the Newton epsilon limit definition. See the python functions <span class="math inline">\(\texttt{gradx(H,state)}\)</span> and <span class="math inline">\(\texttt{gradv(H,state)}\)</span> defined below. We find <span class="math inline">\(\nabla_{x_i} H= \sum'_j \nabla_{x_i} H(p_i, p_j)\)</span> and <span class="math inline">\(\nabla_{v_i} H= \sum'_j \nabla_{v_i} H(p_i, p_j).\)</span> We express the gradient using the computational identity <span class="math display">\[\texttt{grad(H, state) = [sum([numgrad(H, pi,pj) for pj in state if i,j distinct]) for pi in state]}.\]</span> We tried using <span class="math inline">\(\texttt{autograd}\)</span> package, but were more successful with explicit numerical approximations.</p>
+</section>
+<section id="weber-hamilton-equations-of-motion" class="level2">
+<h2 class="anchored" data-anchor-id="weber-hamilton-equations-of-motion">Weber-Hamilton Equations of Motion</h2>
+<p>In the above python code we have obtained the space gradient <span class="math inline">\(\nabla_x H\)</span> and velocity gradient <span class="math inline">\(\nabla_v H\)</span>. The next step is simulating the Weber-Hamilton equations of motion.</p>
+<p>Recall the effective mass operator <span class="math inline">\(A\)</span> which we define as the minimal energy symmetric operator <span class="math inline">\(A\)</span> satisfying <span class="math display">\[x'= v= A^{-1} \nabla_v H.\]</span> The Weber-Hamilton equations of motion is represented by the ODE <span class="math display">\[(x', v') = (A^{-1}.\nabla_v H, -A^{-1}. \nabla_x H).\]</span> The hypothesis that <span class="math inline">\(A\)</span> is symmetric and solves WH equations implies Conservation of Energy is satisfied. Thus we look to numerically compute the operator <span class="math display">\[A_{\text{inv}}:=\texttt{minEnergySymmSolve}(\nabla_v H,v).\]</span></p>
+<p>Given the effective mass operator <span class="math inline">\(A_{\text{inv}}\)</span>, the acceleration of the system is defined by <span class="math display">\[a=v'=-A_{\text{inv}}. \nabla_x H.\]</span> Thus we compute the accelerations in the given Cartesian coordinates. This makes the WH equations explicit.</p>
+<p><em>What are our options for solving WH equations of motion?</em></p>
+<p>The first principle is that our integrators must satisfy Conservation of Energy. For classical Hamiltonian equations, energy conservation is preserved by the symplectic KDK (“Kick-Drift-Kick”) integrators. But these symplectic integrators are not immediately applicable to the WH equations. In section below we introduce the WKDK integrators (Weber Kick-Drift-Kick).</p>
+<p>Remark. We observe that <span class="math inline">\(\nabla_v H=0\)</span> only if <span class="math inline">\(v=0\)</span>. Therefore <span class="math inline">\(A_{\text{inv}}\)</span> is well defined even when <span class="math inline">\(\nabla_v H=0\)</span>, with the zero operator being the unique min energy solution mapping <span class="math inline">\(A.0=0\)</span>.</p>
+</section>
+<section id="remark-on-classical-symplectic-flows" class="level2">
+<h2 class="anchored" data-anchor-id="remark-on-classical-symplectic-flows">Remark on Classical Symplectic Flows</h2>
+<p>We are given an ODE <span class="math inline">\(x'=\phi(t,x)\)</span>. Concretely we study <span class="math inline">\(x' = A^{-1} J \nabla H\)</span>. The forward time evolution <span class="math inline">\(\Phi=\Phi_t\)</span> map gives the time <span class="math inline">\(t\)</span> solution of the IVP <span class="math inline">\(x'=\phi(t,x)\)</span>, <span class="math inline">\(x'(0)=t_0\)</span> at time <span class="math inline">\(t\)</span>. The evolution map <span class="math inline">\(\Phi\)</span> has Jacobian defined by <span class="math display">\[J=D_x \Phi.\]</span> Differentiating the ODE system we find <span class="math inline">\(J\)</span> satisfies <span class="math display">\[\frac{d}{dt} J = D_x \phi.\]</span> This is a linear system of ODEs with solution <span class="math display">\[J=J(t) = \text{exp}(\int_{t_0}^t D \phi d\tau) .\]</span> Here <span class="math inline">\(\text{exp}\)</span> denotes matrix exponential.</p>
+<p>Product rule implies <span class="math inline">\(D\phi = D (A J. \nabla H) = (DA)J \nabla H + AJ. D^2 H\)</span>.</p>
+<p>We note that <span class="math inline">\(DA\)</span> consists of the tensor object <span class="math inline">\((\frac{\partial}{\partial x_i^j}A )_{ij}\)</span>. This tensor is multiplied by <span class="math inline">\(J \nabla H\)</span> with equal indices <span class="math inline">\(ij\)</span> and we obtain a square matrix <span class="math inline">\(DA. J \nabla H\)</span>.</p>
+<p><strong>Claim</strong>: The Hamiltonian <span class="math inline">\(H\)</span> is quadratic in the velocity terms. Therefore we expect <span class="math inline">\(D^2 H\)</span> has constant velocity term, which only depends on relative positions.</p>
+<p><strong>Claim</strong>: The effective mass operator <span class="math inline">\(A\)</span> depends only on position, not velocity. I.e. <span class="math inline">\(D_v A =0\)</span>.</p>
+<p><strong>Claim</strong>: To prove the classical Hamiltonian is symplectic requires proving that <span class="math inline">\(D\phi\)</span> is a matrix of the form <span class="math display">\[D\phi = \begin{pmatrix} A &amp; B \\ C &amp; -{}^t A
+\end{pmatrix}\]</span> where <span class="math inline">\(B={}^tB\)</span> and <span class="math inline">\(C={}^tC\)</span> are symmetric. This is obvious from the classical formula $D = J D^2 H, $ where <span class="math display">\[JD^2 H =
+\begin{pmatrix} \nabla^2_{xv} H &amp; \nabla^2_{vv} H \\ -\nabla^2_{xx} H &amp; -\nabla^2_{vx} H
+\end{pmatrix}.\]</span> This condition is equivalent to the operator <span class="math inline">\(D \phi\)</span> being Hamiltonian in the sense of Lie algebras.</p>
+<p>We recall the identities <span class="math display">\[\nabla_v H = A v\]</span> and <span class="math display">\[\nabla^2_{xv} H = \text{grad}_x A . v.\]</span></p>
+<p><strong>Claim</strong>: We find <span class="math inline">\(DA. J \nabla H = D_x A . A v\)</span> and we argue that <span class="math inline">\(D_v A = 0\)</span>. This implies <span class="math inline">\(\nabla^2_{xv}H=\text{grad}_x A.v\)</span>.</p>
+<p><strong>Claim</strong>: We have <span class="math inline">\(\nabla^2_{vv} H = \text{grad}_{v} (Av) = A\)</span>. This implies an alternative explicit formula for <span class="math inline">\(A\)</span>.</p>
+<p>So we obtain the formula <span class="math display">\[D \phi = D_x A . Av + A J \nabla^2 H.\]</span> In the classical case <span class="math inline">\(A\)</span> is diagonal matrix which is independant of <span class="math inline">\(x\)</span>, hence <span class="math inline">\(D\phi\)</span> obviously satisfies the Hamiltonian Lie algebra conditions and integrates to a symplectic operator <span class="math inline">\(\Phi=\exp(\int D\phi)\)</span> on state space.</p>
+<p><em>Problem: Can we decide whether <span class="math inline">\(D \phi\)</span> is a Hamiltonian matrix (skew symmetric) with respect to some almost-complex structure <span class="math inline">\(\tilde{j}\)</span> on state space?</em></p>
+</section>
+<section id="textttwkdk-integrators-of-wh-equations" class="level2">
+<h2 class="anchored" data-anchor-id="textttwkdk-integrators-of-wh-equations"><span class="math inline">\(\texttt{WKDK}\)</span> Integrators of WH Equations</h2>
+<p>We want to numerically integrate the equations of motion such that Conservation of Energy is satisfied. The usual <span class="math inline">\(\texttt{solve\_ivp}\)</span> method is not sufficient. The classical Hamiltonian, with velocity-independant potential energy and position-independant kinetic energy, has a well-known symplectic integration scheme called Kick-Drift-Kick, c.f. “velocity Verlet” and “leapfrog Verlet” integrators. The basic idea of KDK is building the total Hamiltonian <span class="math inline">\(H=T+U\)</span> as a combination of <em>exact</em> solutions of <span class="math inline">\(H_U = U\)</span> and <span class="math inline">\(H_T=T\)</span>. Superposition of these exact solutions defines the KDK integration, and classically is a symplectic transformation on classical state space. In our WH equations of motion, there is no obvious symplectic structure, neither do the Weber Kick and Weber Drift steps admit <em>exact</em> solutions. We define <span class="math inline">\(\texttt{WeberKick}\)</span> and <span class="math inline">\(\texttt{WeberDrift}\)</span> updates corresponding to <span class="math inline">\(H_U\)</span>, <span class="math inline">\(H_T\)</span> respectively.</p>
+<section id="textttweberdrift" class="level3">
+<h3 class="anchored" data-anchor-id="textttweberdrift"><span class="math inline">\(\texttt{WeberDrift}\)</span></h3>
+<p>Formally consider the restricted Hamiltonian <span class="math inline">\(H_T = T = \frac{1}{2} \mu {\dot{r}}^2\)</span>. If we were studying particle states strictly with respect to Hamiltonian <span class="math inline">\(H_T\)</span>, then our method would approach the Hamilton equations by first considering the equation $ x’ = v = A_{inv} _v T $ as implicitly defining the inverse effective inertial mass operator <span class="math inline">\(A_{inv}\)</span> relative to <span class="math inline">\(H_T\)</span>. However for the purposes of numerical integration and Conservation of Energy, we rather define <span class="math inline">\(A_{inv}\)</span> to be the effective inertial mass operator relative to Weber’s total Hamiltonian <span class="math inline">\(H\)</span>. Therefore we define <span class="math display">\[A_{inv} = \texttt{minEnergySymmSolve}(\nabla_v H, v) = (\nabla^2_{vv} H)^{-1} .\]</span></p>
+<p>The second equation is <span class="math display">\[v' = a = -A_{inv} \nabla_x T=-(\nabla^2_{vv} H)^{-1}\nabla_x T\]</span> which defines the acceleration of the system. Classically this second equation is zero <span class="math inline">\(v'=x''=a=0\)</span>.</p>
+<p>Weber Drift consists of updating <span class="math display">\[x^* = x + \Delta t. A_{inv}. \nabla_vT \]</span> and <span class="math display">\[ v^* = v - \Delta t. A_{inv}. \nabla_x T .\]</span> These <span class="math inline">\(x^*, v^*\)</span> are only approximate solutions of the Hamiltonian <span class="math inline">\(H_T\)</span>. The choice of <span class="math inline">\(A_{inv}\)</span> implies <span class="math inline">\(T\)</span> is not strictly conserved. However in the composition WKDK this choice will improve stability.</p>
+<p>Remark. The classical drift step is the exact solution for systems with only kinetic energy, solving the equation of motion <span class="math inline">\(\dot{q} = p/m\)</span> in the classical notation. The solution describes uniform motion under constant momentum, which is a classical result of Newtonian mechanics, the so-called Principle of Inertia. Therefore in the absence of external force <span class="math inline">\(a=v'=0\)</span>, a particle moves uniformly with constant momentum. We remark that “inertial mass” is <em>not</em> defined by this Principle of Inertia.</p>
+</section>
+<section id="textttweberkick" class="level3">
+<h3 class="anchored" data-anchor-id="textttweberkick"><span class="math inline">\(\texttt{WeberKick}\)</span></h3>
+<p>The Weber Kick update arises from the Hamiltonian <span class="math inline">\(H_U = U\)</span>. Again we choose to define <span class="math inline">\(A_{inv}\)</span> as the inverse effective inertial mass operator defined relative to the total Weber Hamiltonian <span class="math inline">\(H\)</span>.</p>
+<p>We find <span class="math display">\[v'=a=- A_{inv} \nabla_x U.\]</span> The Weber Kick update consists of the approximate solution <span class="math display">\[x^* = x + \Delta t.A_{inv}\nabla_v U\]</span> and <span class="math display">\[v^* = v - \Delta t. A_{inv} . \nabla_x U.\]</span></p>
+<p>Remark. What choice of effective inertial mass should we choose? We think we need keep <span class="math inline">\(A_{inv}\)</span> equal to the effective inertial mass of the original total system, namely <span class="math display">\[A_{inv}:=\texttt{minEnergySymmSolve}(\nabla_v H, v)= \quad \quad \ldots \quad \quad = (\nabla^2_{vv} H)^{-1}.\]</span> In the classical KDK integrators, <span class="math inline">\(A_{inv}\)</span> is represented by the diagonal inverse mass operator <span class="math inline">\((\mu_i^{-1} Id_i)_i\)</span> and is constant during the KDK updates.</p>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>This post describes basic theory behind the python code which simulates the Weber <span class="math inline">\(N\)</span>-body electrodynamics. We have translated the python code to a different notebook. A few tasks remai.</p>
+<ul>
+<li>3D plot evolution of N-body systems.</li>
+<li>Plot a two-body simulation and demonstrate orbital recession.</li>
+<li>Positronium simulation?</li>
+<li>Six-body simulations and Weber-Sansbury atomic models.</li>
+<li>Trotter-Suzuki Decompositions, formulae for exponentials of noncommuting operators, higher-order integrators.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/jhmlabs\.github\.io\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
