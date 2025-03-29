@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.3">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="JHM">
+<meta name="dcterms.date" content="2024-01-02">
+
+<title>Weber, Work, Energy – jhmlabs</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../im1.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-81b5c3e63835cfde897ecd3d35a35a41.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-299fde5381b5a602aab895950093955a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">jhmlabs</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/_jhmlabs"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Weber, Work, Energy</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">Weber</div>
+                <div class="quarto-category">energy</div>
+                <div class="quarto-category">work</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>JHM </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">January 2, 2024</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<section id="work-webers-critical-radius-energy" class="level1">
+<h1>“Work, Weber’s Critical Radius, Energy”</h1>
+<p>Einstein’s <span class="math inline">\(E=mc^2\)</span> is the most famous formula in history, but what does it mean? Here we emphasize that Einstein derived the formula from mathematics in 1905, but Wilhelm Weber derived the formula from his fundamental electodynamic force law. Weber’s derivation leads to the amazing prediction of 2 equal to 1 plus 1 as a stable electronic system.</p>
+<p>Consider the problem of work and moving particles “upstream” of the potential. Recall the Coulomb-type expression that “opposite charges attract” and “like charges repel”. If we arranged some charged particles on a plate, then in a short time these particles would either be repelled outwards to the boundary of the plate or the opposite charges would cancel on the interior. Again this is with respect to the Coulomb model <span class="math inline">\(V(r)=1/r\)</span>.</p>
+<p>But Weber’s model has the following amazing prediction: “opposite charges attract except at a small critical distance <span class="math inline">\(r=r_c\)</span> where the charges acquires a <em>negative</em> inertial mass and the Weber force becomes repulsive”. Furthermore, “like charges repel except at a small critical distance where the Weber force becomes attractive”. This latter prediction leads to Weber’s *planetary model of the atom”.</p>
+<p>In the (cgs) units the critical radius <span class="math inline">\(r_c\)</span> is computed as <span class="math inline">\(r_c=\frac{1}{m c^2}\)</span> where <span class="math inline">\(m\)</span> is the relative inertial mass of one of the particles. The proof of this formula is an application of Newton’s second law, that <span class="math inline">\(m a = \bf{F}\)</span> where <span class="math inline">\(\bf{F}\)</span> is Weber’s force.</p>
+<p>Now the question arises: if we have two identical but opposite electrically charged particles, say <span class="math inline">\((-1)e\)</span> and <span class="math inline">\((+1)e\)</span>, where <span class="math inline">\(e\)</span> is a small mass, then how much <em>work</em> is required to drive <span class="math inline">\((-1)e\)</span> and <span class="math inline">\((+1)e\)</span> to within Weber’s critical radius <span class="math inline">\(r_c\)</span>?</p>
+<p>Weber comments in his final memoir [ref] that an <em>infinite</em> amount of work would be required, however no technical details are provided. In fact this author thinks its evident that a large finite amount of work is required, and the computation of this work required is the subject of this post.</p>
+<p>How to compute Work: We imagine a particle moving through a potential <span class="math inline">\(U\)</span> along a trajectory <span class="math inline">\(\gamma.\)</span> Our goal is to determine how much work is required to breach (“pass through”) the critical radius <span class="math inline">\(r_c=\frac{1}{mc^2}\)</span> in units where <span class="math inline">\(4 \pi\epsilon_0  = 1\)</span>.</p>
+<p>We begin assuming the particle’s trajectory is <em>rectilinear</em>. This means the tangent <span class="math inline">\(\gamma'\)</span> and <span class="math inline">\(\gamma\)</span> are parallel for all values of the parameter. Moreover we can use the Riemannian idea of parameterizing the curve by arclength. Then we ask how much work is required to move the particle through <span class="math inline">\(U\)</span> at a constant rate of speed, namely <span class="math inline">\(||\gamma'||=1\)</span>.</p>
+<p>Weber’s force is conservative, so there is some path independance, however the terminal conditions are not fixed a priori. It might happen that breaching the Weber radius is easier if the particles velocity is nearly parallel to the “virtual” surface of the Weber’s critical radius. That is to say, the curvature term <span class="math inline">\(r r''/c^2\)</span> in Weber’s force law might sometimes reduce the work needed, depending on the sign.</p>
+<p>In terms of the relational variables recall the useful formula/definition <span class="math display">\[ r' = \frac{\bf{r} \cdot \bf{r'}}{r}.\]</span> In our setting we find <span class="math display">\[r'=\frac{\gamma \cdot \gamma'}{||\gamma||}.\]</span> Applying the Cauchy-Schwartz inequality, we find <span class="math display">\[r'=1.\]</span> I.e. equality is obtained in Cauchy-Schwartz because <span class="math inline">\(\gamma, \gamma'\)</span> are parallel by hypothesis and <span class="math inline">\(||\gamma'||=1\)</span>.</p>
+<p>Moreover the rectilinear motion implies <span class="math inline">\(r''=0\)</span>, i.e.&nbsp;the trajectory has zero curvature, since the direction of the particle does not change. Therefore Weber’s force leads to work being computed by the integral <span class="math display">\[W=(1-\frac{1}{2c^2})\int_{+\infty}^{r_c} \frac{1}{r^2} dr     = (1-\frac{1}{2c^2})mc^2=mc^2-m/2.\]</span> So what is the total energy of the above system? The total energy is the work required <span class="math inline">\(mc^2 - m/2\)</span> plus the initial kinetic energy <span class="math inline">\(T_i=m|\gamma'|^2/2=m/2\)</span>. Therefore the total energy required to breach the Weber critical radius is <span class="math inline">\(E=W+T_i=mc^2\)</span>.</p>
+<p>N.B. All the while our particles are “travelling upstream”. So the above computation indicates that if a particle is given sufficient energy (i.e.&nbsp;sufficient kinetic energy, then the particle could breach the Weber critical radius, and arriving at the Weber radius with almost zero kinetic energy).</p>
+<p>N.B. The integral representing <span class="math inline">\(W\)</span> is parameterization independant. Therefore the work required by the unit-parameterized path is not overly specialized, but represents the general computation.</p>
+<p>The above discussion was restricted to <em>rectilinear</em> trajectories. But the possibility remains that curvilinear (“spiralling”) trajectories require less work to breach the Weber radius. Thus while it appears that breaching the Weber radius via rectilinear paths requires large energy <span class="math inline">\(\approx mc^2\)</span>, perhaps the spiralling paths – where the curvature term maintains a definite sign – are the more interesting.</p>
+<p>Problem: Determine the minimum energy required for an isolated two-body system to breach the Weber critical radius.</p>
+<p>Answer: The minimum energy required to breach the critical radius is <span class="math inline">\(E=mc^2\)</span>.</p>
+<p>This is consequence of the fact that <span class="math inline">\(\bf{F}\)</span> is a conservative force, therefore dependant only on the initial and terminal states, and not the path taken. Moreover the work done by a particle traversing a path <span class="math inline">\(\gamma\)</span> depends only on the difference in potential energies. This implies that the above evaluation in the <em>rectilinear</em> case is essentially the same for all paths from some initial point to to within the critical radius.</p>
+</section>
+<section id="einsteins-nonphysical-derivation" class="level1">
+<h1>Einstein’s NonPhysical Derivation</h1>
+<p>k we apparently all know that <span class="math inline">\(E=mc^2\)</span> is one of the great achievements of Albert Einstein. He first published the idea in 1905 in a paper called “Does the inertia of a body depend upon its energy content?”</p>
+<p>But what does the formula <em>mean</em>?</p>
+<p>Supposedly it’s one of the greatest formulas in history, yet what is the <em>content</em> of this supposed formula?</p>
+<p>We give the reader a few minutes to consider what they understand about this formula. For example, what can you say about it?</p>
+<p>The standard explanations are not so useful. They say that a body of mass possesses some <em>intrinsic energy</em> which is independant of the observer frame. And this intrinsic energy is computed – according to Einstein’s suggestion – as <span class="math inline">\(m_0c^2\)</span>, where <span class="math inline">\(m=m_0\)</span> is the inertial rest mass of the object.</p>
+<p>Now here enters another idea, that the inertial mass of an object increases with its velocity, i.e.&nbsp;we have <span class="math inline">\(E=mc^2 = \beta m_0 c^2\)</span> where <span class="math inline">\(\beta\)</span> is one of the Lorentz-type beta factor arising so frequently in special relativity, that is <span class="math inline">\(\beta = 1 /\sqrt{1-v^2/c^2}\)</span>.</p>
+<p>Now look, for most students in university, or even adults, this is the end of the story. You can take physics in undergraduate college or university, and I think this is the standard treatment.</p>
+<p>You can ask “Why is the formula true?”, and the teacher might say “You won’t need to prove it on the exam, don’t worry about it!”, or “Well, I don’t know, nobody ever asked me, but I guess you can read Einstein’s work”, or “I don’t know, but look at wikipedia.”</p>
+<p>And reading Einstein’s original paper <em>is</em> a good idea, although it won’t likely be satisfying. Another good reference is Levi-Civita’s “Absolute Differential Calculus” textbook which has very detailed mathematical review of Einstein’s “physical principles”.</p>
+<p>In Levi-Civita’s textbook, the formula is <em>derived</em> via an argument using Hamilton’s principle. It’s something like this: we start with the usual Lagrangian <span class="math inline">\(L\)</span>, and find the equations of motion are <span class="math inline">\(\delta \int L = 0\)</span>, where <span class="math inline">\(\delta \int\)</span> is the variational derivative of the functional <span class="math inline">\(\alpha \mapsto \int_\alpha L\)</span>. (Here <span class="math inline">\(\alpha\)</span> denotes a path, not the earlier Lorentz gamma factor.)</p>
+<p>Actually in Einstein and Levi-Civita’s approach, which is based on Hamilton principle. The starting point is a Lagrangian <span class="math inline">\(L\)</span> defined on the statespace, and then with Hamiltonian <span class="math inline">\(H=L^*\)</span>. The Hamiltonian principle says <span class="math display">\[\delta \int L=0.\]</span> But Einstein introduces the variational equation <span class="math display">\[\delta \int c^2 = 0.\]</span> And he says this equation is <em>trivial</em> like <span class="math display">\[\delta \int dt =0 .\]</span></p>
+<p>So Einstein introduces the Lagrangian <span class="math inline">\(c^2 - L\)</span> and the Hamilton principle becomes <span class="math display">\[\delta \int (c^2 - L) = 0.\]</span></p>
+<p>This apparently trivial modification of the Lagrangian is what introduces (<em>imports</em>) the constant <span class="math inline">\(c^2\)</span> energy term in the Hamiltonian.</p>
+<p>We omit the details from Levi-Civita, but the main formula obtained is <span class="math display">\[H^*=c^2 - L = c^2 \sqrt{ 1-\beta -2U/c } = c^2 +  v^2/2 - U,\]</span> since <span class="math inline">\(L = v^2/2 + U\)</span>. Einstein remarks that if <span class="math inline">\(v=0\)</span> and <span class="math inline">\(U=0\)</span>, i.e.&nbsp;if the potential energy and kinetic energy vanish, then there still remains an intrinsic energy represented by <span class="math inline">\(c^2\)</span>, i.e.&nbsp;the Hamiltonian <span class="math inline">\(H^*\)</span> does not vanish.</p>
+<p>In the above argument, we remark that it’s not always clear that <span class="math inline">\(U=0\)</span> is meaningful or nonarbitrary. As well known, it’s the gradient of the potential <span class="math inline">\(\nabla U\)</span> which enters into the dynamical equations, and not the scalar values of <span class="math inline">\(U\)</span>. So on this point we are not entirely persuaded that <span class="math inline">\(v=0, U=0\)</span> represents an intrinsic energy.</p>
+<p>So in summary, what’s the story behind this amazing formula <span class="math inline">\(E=mc^2\)</span> ? In the above argument, there is no story except trivial mathematics. There is no physics!</p>
+<p>Levi-Civita makes this same remark in his textbook, but points <em>a posteriori</em> to radioactive substances.</p>
+</section>
+<section id="webers-physical-interpretation-of-emu.c2" class="level1">
+<h1>Weber’s Physical Interpretation of E=mu.c^2 ?</h1>
+<p>Wilhelm Weber (1804 – 1891) was a great physicist mathematician who succeeded C.F. Gauss as directory of the Gottingen Observatory. Weber was the first physicist to define <span class="math inline">\(c\)</span>, with Kirchoff using Weber’s force equations, as the velocity of electrical impulses in a material wire.</p>
+<p>In his works on particle electrodynamics, he discovered in 1860s an amazing <em>physical</em> model of <span class="math inline">\(E=\mu c^2\)</span> where <span class="math inline">\(\mu\)</span> is the reduced mass of the system of electric particles. We have written on this amazing fact in a previous post <a href="https://jhmartel.github.io/fp/fastpages/jupyter/2022/02/16/WeberEMC2.html">“Weber’s Critical Radius, Work, and E=mc2 Formulas”</a></p>
+<p>We repeat the fundamental physical idea (and this is what is totally absent in Einstein’s derivation).</p>
+<p>Consider two equal and identical unit electric charges <span class="math inline">\(q_1\)</span> and <span class="math inline">\(q_2\)</span> which are separated by some relative distance <span class="math inline">\(r&gt;0\)</span>. The Couloumbian motto is that “like charges repel, and opposite charges attract”. So a force is required to push the charges <span class="math inline">\(q_1\)</span> and <span class="math inline">\(q_2\)</span> closer together. In otherwords, there is work that needs be done to push the identical charges <span class="math inline">\(q_1, q_2\)</span> together.</p>
+<p>What Weber discovererd in 1860s (maybe earlier) was that there is a critical distance, where if a sufficient amount of work is performed, and the charges <span class="math inline">\(q_1, q_2\)</span> become sufficiently close $r&lt; r_c $ (passing through Weber’s critical radius <span class="math inline">\(r_c\)</span>) then there is a sign in Weber’s force law which predicts that the equal charged particles become <em>attractive</em> within the critical radius <span class="math inline">\(r&lt; r_c\)</span>. In otherwords it’s possible for two-body system of net charge <span class="math inline">\(-2\)</span> <span class="math inline">\((=-1 -1)\)</span> to be a stable system with large potential energy! There is a large amount of potential energy within this system because alot of work was performed to push the particles through the critical radius.</p>
+<p>More specifically, Weber’s force predicts that the amount of work required to push the particles through the critical radius is <span class="math inline">\(E= \mu c^2\)</span>, where <span class="math inline">\(\mu\)</span> is the reduced mass of the system.</p>
+<p>This is amazing fact! This is a physical explanation of <em>what</em> the formula <em>means</em>. The formula represents an amount of work which has been invested into the system. Moreover, Weber’s formula predicts that this potential energy is stored in <em>surprisingly</em> stable many body systems, e.g.&nbsp;two-body systems of the form <span class="math inline">\(-2=-1-1\)</span>.</p>
+<p>I don’t know if the reader can appreciate how EPIC this idea of Weber’s is. It’s the beginning of something <em>incredible</em>, basically returning physics to classical paradigm, and appreciating Wilhelm Weber’s tremendous contributions. Here I have been much influenced by AKT Assis’ recent <a href="https://www.amazon.ca/Wilhelm-Webers-Electrodynamics-Translated-English/dp/1987980298/ref=sr_1_13?keywords=assis+weber&amp;qid=1662256119&amp;sr=8-13">translation</a> into English (and Spanish, Portugese) of Wilhelm Weber’s collected works (in four volumes).</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/jhmlabs\.github\.io\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
