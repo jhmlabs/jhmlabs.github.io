@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/2025-04-01-WeberClausiusEntropyThermodynamics/index.html",
       "/posts/2025-03-28-PythonWeberHamilton/index.html",
       "/posts/2025-03-21-minEnergySymmSolver/index.html",
       "/posts/2025-03-20-DoubleSlitExperimentRevisited/index.html",
@@ -15,6 +16,7 @@
       "/posts/2024-01-22-GaussWorldMagnetModel/index.html",
       "/posts/2024-01-19-WhatIsTime/index.html",
       "/posts/2024-01-10-AmpereMagnetism/index.html",
+      "/posts/2024-01-03-WeberGibbsLiouville/2024-01-03-WeberGibbsLiouville.html",
       "/posts/2024-01-02-WeberWorkEnergyEmuc2/index.html",
       "/posts/2023-03-08-FizeauSansbury/index.html"
     ]

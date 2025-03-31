@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="JHM">
-<meta name="dcterms.date" content="2025-03-28">
-<meta name="description" content="We review python and the Weber Hamilton equations of motion. All python code is omitted from this post, and will be presented in sequel. We review the construction of symplectic integrators adapted to the Weber Hamiltonian and WKDK integrators. Thus we obtain higher-order numerical solutions to WH equations of motion which satisfy Conservation of Energy to reasonably high accuracy.">
+<meta name="dcterms.date" content="2024-01-03">
+<meta name="description" content="We examine the Hamilton equations for Weber’s potential in an isolated two-body system. We construct an invariant measure on the xv state space which is distinct from the conventional Gibbs Liouville measure. The invariant measure is necessary background measure from which we can define entropy of distributions.">
 
-<title>Python Weber Hamilton Computations – jhmlabs</title>
+<title>Weber Hamiltonian Gibbs Liouville Measure on State Space. – jhmlabs</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,6 +22,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -146,17 +180,15 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Python Weber Hamilton Computations</h1>
+      <h1 class="title">Weber Hamiltonian Gibbs Liouville Measure on State Space.</h1>
                   <div>
         <div class="description">
-          We review python and the Weber Hamilton equations of motion. All python code is omitted from this post, and will be presented in sequel. We review the construction of symplectic integrators adapted to the Weber Hamiltonian and WKDK integrators. Thus we obtain higher-order numerical solutions to WH equations of motion which satisfy Conservation of Energy to reasonably high accuracy.
+          We examine the Hamilton equations for Weber’s potential in an isolated two-body system. We construct an invariant measure on the xv state space which is distinct from the conventional Gibbs Liouville measure. The invariant measure is necessary background measure from which we can define entropy of distributions.
         </div>
       </div>
                           <div class="quarto-categories">
-                <div class="quarto-category">algorithm</div>
-                <div class="quarto-category">python</div>
                 <div class="quarto-category">weber</div>
-                <div class="quarto-category">hamilton</div>
+                <div class="quarto-category">atom</div>
               </div>
                   </div>
   </div>
@@ -174,7 +206,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">March 28, 2025</p>
+        <p class="date">January 3, 2024</p>
       </div>
     </div>
     
@@ -193,70 +225,101 @@ window.Quarto = {
 
 
 
-<p>We have tried to write this article many times. We try again. The goal is write <span class="math inline">\(\texttt{python}\)</span> code simulating the Weber-Hamilton equations of motion for <span class="math inline">\(N\)</span>-body electrodynamic systems This is straightforward for classical Hamiltonians, but requires modification for Weber’s Hamiltonian. This post contains no <span class="math inline">\(\texttt{python}\)</span> code, all of which will be presented in future post. Here we review the theoretical aspects of the Weber <span class="math inline">\(\texttt{python}\)</span> notebooks.</p>
-<p>Key ingredients:</p>
+<p>What are Hamilton’s equations? In a sense the equations are a trivial formalization of Newton’s equations. But when applied to Weber’s force law, the Hamilton equations provide a useful formalism.</p>
+<section id="weber-hamilton-liouville-gibbs" class="level1">
+<h1>Weber, Hamilton, Liouville, Gibbs:</h1>
+<section id="two-dimensional-xv-relational-state-space" class="level2">
+<h2 class="anchored" data-anchor-id="two-dimensional-xv-relational-state-space">Two Dimensional xv Relational State Space</h2>
+<p>We let <span class="math inline">\(x,v\)</span> be position and velocity state variables. Let <span class="math inline">\(J\)</span> be the standard almost-complex structure, i.e.&nbsp;<span class="math inline">\(J=\begin{pmatrix} 0 &amp; 1 \\ -1 &amp; 0   \end{pmatrix}\)</span> with <span class="math inline">\(J^2 = -Id\)</span>.</p>
+<p>The classical Gibbs-Liouville theorem [ref] says that the canonical volume form <span class="math inline">\(dx dv\)</span> on state space is invariant with respect to Hamiltonian evolution. In otherwords, for a given rectange <span class="math inline">\(dx dv\)</span> of initial conditions in statespace, the forward time evolution of the Hamiltonian system with these given initial conditions occupies a region in <span class="math inline">\(xv\)</span>-spave having the same volume with respect to <span class="math inline">\(dx dv\)</span>.</p>
+<p>For classical Hamilton equations, this follows from the vector field <span class="math inline">\(J \cdot \nabla H\)</span> being divergence free: <span class="math display">\[div(J \nabla H)=0.\]</span> If we integrate the Hamilton equations, then we obtain <span class="math display">\[\frac{d}{dt}(x,v)=(\dot{x}, \dot{v})= \begin{pmatrix} \partial H / \partial v \\ - \partial H/\partial x   \end{pmatrix},\]</span> and the point is that this field has zero divergence.</p>
+<p>For example, if the <span class="math inline">\(H = \omega (x^2 + v^2)\)</span> is the Hamiltonian for a one-particle oscillator, then the energy levels are circles, and the Hamilton evolution is like a rigid rotation. Therefore it’s evident that the area form <span class="math inline">\(dx dv\)</span> is invariant with respect to time evolution.</p>
+<p>[Another example?]</p>
+<p>Our interpretation of the time evolution being volume invariant means the overall “uncertainty” in the state is constant with respect to time. In other words if we know position <span class="math inline">\(x\)</span> with some error <span class="math inline">\(dx\)</span> and velocity <span class="math inline">\(v\)</span> with error <span class="math inline">\(dv\)</span>, then the overall uncertainty of the system remains <span class="math inline">\(dx dv\)</span> square-error throughout the evolution. This is relatively good, for example if the particles are spatially closeby (so <span class="math inline">\(dx\)</span> is small), then we are certain that <span class="math inline">\(dv\)</span> is large (i.e.&nbsp;they have large relative motion). Likewise if the particles have very small relative motion (<span class="math inline">\(dv\)</span> small) then the particles have large relative position (<span class="math inline">\(dx\)</span> large).</p>
+<p>The existence of an invariant background measure <span class="math inline">\(dx dv\)</span> on state space is necessary to define the <em>entropy</em> of states <span class="math inline">\(\rho\)</span>, where entropy is defined relative to this background mesaure. However our researches into Weber electrodynamics has led us to review the basic Gibbs Liouville measure. We find the usual Gibbs-Liouville volume form <span class="math inline">\(dx dv\)</span> is <em>not invariant</em> when the state space evolves according to Weber’s Hamiltonian. Our goal in this article is to derive the proper Weberian invariant measure on state space.</p>
+</section>
+</section>
+<section id="webers-electrodynamic-two-body-hamiltonian" class="level1">
+<h1>Weber’s Electrodynamic Two-Body Hamiltonian:</h1>
+<p>The Hamiltonian for a reduced two-body problem can be rewritten in variables <span class="math inline">\((x,v)\)</span> where <span class="math inline">\(x&gt;0\)</span> and Weber’s Hamiltonian is <span class="math display">\[H = \frac{1}{2} \mu v^2 + \frac{\alpha}{x}(1-\frac{v^2}{2c^2}), \]</span> with <span class="math inline">\(\alpha:=q_1 q_2\)</span> and <span class="math inline">\(\mu:=\frac{m_1 m_2}{m_1+m_2}\)</span> is the reduced inertial mass of the system. We restrict <span class="math inline">\(x&gt;0\)</span> because <span class="math inline">\(x\)</span> represents the relative distance <span class="math inline">\(x=r\)</span> between the two particles. It is convenient to set <span class="math display">\[\mu_{\text{eff}}:=\mu-\frac{\alpha}{c^2x}.\]</span></p>
+<p>Hamilton’s equations become <span class="math display">\[ \frac{d}{dt}(x,v)=(x',v')= \mu_{\text{eff}}^{-1}\cdot~~  J \nabla H.\]</span></p>
+<p>What is the divergence of this vector field? First we apply product rule and find <span class="math display">\[div(\mu_{\text{eff}}^{-1}.J\nabla H) = \nabla \mu_{\text{eff}}^{-1}~ \cdot J \nabla H\]</span> since <span class="math inline">\(div(J \nabla H)=0\)</span>. Therefore the divergence of the Hamilton flow is the dot product of <span class="math inline">\(\nabla \mu_{\text{eff}}^{-1}\)</span> with <span class="math inline">\(J \nabla H\)</span>.</p>
+<p>The gradient of <span class="math inline">\(\mu_{\text{eff}}^{-1}\)</span> is directly computed as <span class="math display">\[\nabla \mu_{\text{eff}}^{-1} = \begin{pmatrix} -{\mu_{\text{eff}}}^{-2} . \frac{\alpha}{c^2 x^2}  \\ 0 \end{pmatrix}.\]</span></p>
+<p>Defining <span class="math inline">\(\beta = \frac{\mu c^2}{\alpha}\)</span> the divergence of the vector field then becomes <span class="math display">\[div = \frac{v}{x}~ \frac{1}{1-\beta x}.\]</span></p>
+<p>We make some remarks on this computation. The noninvariance of the volume <span class="math inline">\(dxdv\)</span> means that Gibbs entropy of the system cannot be defined relative to <span class="math inline">\(dxdv\)</span>. Rather we need an invariant reference measure on the state space. In the following section we derive densities <span class="math inline">\(\rho = f dx dv\)</span> on the state spacee invariant with respect to the Hamilton Weber evolution.</p>
+</section>
+<section id="solving-for-the-invariant-density-f" class="level1">
+<h1>Solving for the Invariant Density <span class="math inline">\(f\)</span>:</h1>
+<p>Formally the divergence of <span class="math inline">\(X\)</span> is the Lie derivative <span class="math inline">\(L_X(vol)\)</span> of the volume form. Here we look for a function <span class="math inline">\(f\)</span> such that the measure <span class="math inline">\(\rho=f dxdv\)</span> is invariant with respect to Weber Hamilton flow. This means finding <span class="math inline">\(\rho=f.vol\)</span> such that <span class="math inline">\(L_X(f.vol)=0\)</span> is identically zero. We proceed using Cartan’s formula <span class="math display">\[L_X = \iota_X d + d \iota_X\]</span> and find <span class="math display">\[L_X (f.vol) = d(f \iota_X vol) =0.\]</span></p>
+<p>In coordinates if <span class="math inline">\(X=X_1 \partial_x + X_2 \partial_v\)</span>, then <span class="math display">\[\iota_X vol = \iota_X dxdv = X_1 dv - X_2 dx.\]</span> Therefore <span class="math inline">\(L_X (f.dxdv)=d(f X_1 dv - f X_2 dx)\)</span> and our basic equation becomes <span class="math display">\[ f\cdot (X_{1,x}+ X_{2,v}) + f_{,x}~ X_1 + f_{,v} ~X_2=0. \]</span></p>
+<p>Everything is computed explicitly using Hamilton’s equations.</p>
 <ul>
-<li>We construct <span class="math inline">\(H\)</span> in python as the sum over all <span class="math inline">\(2\)</span>-body interactions.</li>
-<li>We compute the numerical gradients of <span class="math inline">\(H\)</span>.</li>
-<li>We use <span class="math inline">\(\texttt{minEnergySymmSolve}\)</span> to define effective inertial mass operators <span class="math inline">\(A\)</span>, although we do have alternative formula <span class="math inline">\(\nabla^2_{vv}H =A\)</span>.</li>
-<li>We review the symplecticity of classical Hamiltonian systems.</li>
-<li>We define <span class="math inline">\(\texttt{WeberKick}\)</span> and <span class="math inline">\(\texttt{WeberDrift}\)</span> updates, and construct <span class="math inline">\(\texttt{WKDK}\)</span> Leapfrog Verlet integrator.</li>
-<li>We review higher-order Trotter-Suzuki approximations, Forest-Ruth coefficients, and Yosida sixth order integrators of WH equations of motion.</li>
-<li>We rescale WH to simulate physical atomic scale.</li>
+<li><span class="math inline">\(X_1 = v\)</span> ; therefore <span class="math inline">\(f X_{1,x}=0\)</span></li>
+<li><span class="math inline">\(X_2 = \mu_{\text{eff}}^{-1} \cdot \frac{- \partial H}{\partial x} = \mu_{\text{eff}}^{-1} ~ (\frac{\alpha}{x^2}) ~ (1-\frac{v^2}{2 c^2})\)</span>.</li>
 </ul>
-<section id="computing-the-numerical-gradients-of-h" class="level2">
-<h2 class="anchored" data-anchor-id="computing-the-numerical-gradients-of-h">Computing the Numerical Gradients of <span class="math inline">\(H\)</span></h2>
-<p>The first problem is python coding the Hamiltonian <span class="math inline">\(H\)</span>. Weber is instantaneous action-at-a-distance, and a key hypothesis of Weber electrodynamics is that <span class="math inline">\(N\)</span>-body interactions are determined by the subset of <span class="math inline">\(2\)</span>-body subinteractions. Hence the total gradients of <span class="math inline">\(H\)</span> are computed recursively as sums over all <span class="math inline">\(2\)</span>-body pairs. Thus <span class="math display">\[H=\sum_{ij} H(p_i, p_j)\]</span> where the sum ranges over all pairs of distinct particles <span class="math inline">\(p_i, p_j\)</span>. In section below we construct the numerical Cartesian gradients <span class="math inline">\(\nabla_{x_i} H(p_i, p_j)\)</span> and <span class="math inline">\(\nabla_{v_i} H(p_i, p_j)\)</span> using the Newton epsilon limit definition. See the python functions <span class="math inline">\(\texttt{gradx(H,state)}\)</span> and <span class="math inline">\(\texttt{gradv(H,state)}\)</span> defined below. We find <span class="math inline">\(\nabla_{x_i} H= \sum'_j \nabla_{x_i} H(p_i, p_j)\)</span> and <span class="math inline">\(\nabla_{v_i} H= \sum'_j \nabla_{v_i} H(p_i, p_j).\)</span> We tried using <span class="math inline">\(\texttt{autograd}\)</span> package, but were more successful with explicit numerical approximations.</p>
+<p>Substituting we find the basic equation now becomes <span class="math display">\[f~(\mu_{\text{eff}}^{-1}~ \frac{\alpha}{c^2}~\frac{v}{x^2})+ f_{,x}~ v+ f_{,v} ~\mu_{\text{eff}}^{-1} ~\frac{\alpha}{x^2}~ (1-\frac{v^2}{2 c^2})=0.\]</span></p>
+<p>Without further assumptions, we see every function <span class="math inline">\(f\)</span> satisfying this ODE defines an invariant measure on state space.</p>
+<p>At this stage enters some arbitrary choices, for example whether the distribution <span class="math inline">\(f\)</span> satisfies either <span class="math inline">\(f_{, x}=0\)</span> or <span class="math inline">\(f_{, v}=0\)</span> identically.</p>
+<section id="distance-independant-densities" class="level2">
+<h2 class="anchored" data-anchor-id="distance-independant-densities">Distance Independant Densities</h2>
+<p>Suppose that <span class="math inline">\(f_{,x}=0\)</span> identically. Then the basic equation becomes <span class="math display">\[d_v \log f = -\log (1-\frac{v^2}{2c^2}).\]</span> Therefore we find <span class="math inline">\(f= (1-\frac{v^2}{2c^2})^{-1}\)</span> is an invariant density which is position independant.</p>
+<ul>
+<li><strong><em>Proposition:</em></strong> <em>The density</em> <span class="math display">\[\rho =(1-\frac{v^2}{2c^2})^{-1} ~dx dv\]</span> <em>is the unique invariant measure on state space <span class="math inline">\(\{(x,v)~~|~x&gt;0\}\)</span> which is position independant and satisfies</em> <span class="math inline">\(\rho(x,0)=1\)</span> <em>identically.</em></li>
+</ul>
+<div id="cell-5" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">80</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span>(<span class="dv">1</span><span class="op">-</span>x<span class="op">**</span><span class="dv">2</span><span class="op">/</span><span class="dv">2</span>)<span class="op">**-</span><span class="dv">1</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>plt.plot(x, y)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2024-01-03-WeberGibbsLiouville_files/figure-html/cell-2-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="weber-hamilton-equations-of-motion" class="level2">
-<h2 class="anchored" data-anchor-id="weber-hamilton-equations-of-motion">Weber-Hamilton Equations of Motion</h2>
-<p>In the above python code we have obtained the space gradient <span class="math inline">\(\nabla_x H\)</span> and velocity gradient <span class="math inline">\(\nabla_v H\)</span>. The next step is simulating the Weber-Hamilton equations of motion.</p>
-<p>Recall the effective mass operator <span class="math inline">\(A\)</span> which we define as the minimal energy symmetric operator <span class="math inline">\(A\)</span> satisfying <span class="math display">\[x'= v= A^{-1} \nabla_v H.\]</span> The Weber-Hamilton equations of motion is represented by the ODE <span class="math display">\[(x', v') = (A^{-1}.\nabla_v H, -A^{-1}. \nabla_x H).\]</span> The hypothesis that <span class="math inline">\(A\)</span> is symmetric and solves WH equations implies Conservation of Energy is satisfied. Thus we look to numerically compute the operator <span class="math display">\[A_{\text{inv}}:=\texttt{minEnergySymmSolve}(\nabla_v H,v).\]</span></p>
-<p>Given the effective mass operator <span class="math inline">\(A_{\text{inv}}\)</span>, the acceleration of the system is defined by <span class="math display">\[a=v'=-A_{\text{inv}}. \nabla_x H.\]</span> Thus we compute the accelerations in the given Cartesian coordinates. This makes the WH equations explicit.</p>
-<p><em>What are our options for solving WH equations of motion?</em></p>
-<p>The first principle is that our integrators must satisfy Conservation of Energy. For classical Hamiltonian equations, energy conservation is preserved by the symplectic KDK (“Kick-Drift-Kick”) integrators. But these symplectic integrators are not immediately applicable to the WH equations. In section below we introduce the WKDK integrators (Weber Kick-Drift-Kick).</p>
-<p>Remark. We observe that <span class="math inline">\(\nabla_v H=0\)</span> only if <span class="math inline">\(v=0\)</span>. Therefore <span class="math inline">\(A_{\text{inv}}\)</span> is well defined even when <span class="math inline">\(\nabla_v H=0\)</span>, with the zero operator being the unique min energy solution mapping <span class="math inline">\(A.0=0\)</span>.</p>
-</section>
-<section id="remark-on-classical-symplectic-flows" class="level2">
-<h2 class="anchored" data-anchor-id="remark-on-classical-symplectic-flows">Remark on Classical Symplectic Flows</h2>
-<p>We are given an ODE <span class="math inline">\(x'=\phi(t,x)\)</span>. Concretely we study <span class="math inline">\(x' = A^{-1} J \nabla H\)</span>. The forward time evolution <span class="math inline">\(\Phi=\Phi_t\)</span> map gives the time <span class="math inline">\(t\)</span> solution of the IVP <span class="math inline">\(x'=\phi(t,x)\)</span>, <span class="math inline">\(x'(0)=t_0\)</span> at time <span class="math inline">\(t\)</span>. The evolution map <span class="math inline">\(\Phi\)</span> has Jacobian defined by <span class="math display">\[J=D_x \Phi.\]</span> Differentiating the ODE system we find <span class="math inline">\(J\)</span> satisfies <span class="math display">\[\frac{d}{dt} J = D_x \phi.\]</span> This is a linear system of ODEs with solution <span class="math display">\[J=J(t) = \text{exp}(\int_{t_0}^t D \phi d\tau) .\]</span> Here <span class="math inline">\(\text{exp}\)</span> denotes matrix exponential.</p>
-<p>Product rule implies <span class="math inline">\(D\phi = D (A J. \nabla H) = (DA)J \nabla H + AJ. D^2 H\)</span>.</p>
-<p>We note that <span class="math inline">\(DA\)</span> consists of the tensor object <span class="math inline">\((\frac{\partial}{\partial x_i^j}A )_{ij}\)</span>. This tensor is multiplied by <span class="math inline">\(J \nabla H\)</span> with equal indices <span class="math inline">\(ij\)</span> and we obtain a square matrix <span class="math inline">\(DA. J \nabla H\)</span>.</p>
-<p><strong>Claim</strong>: The Hamiltonian <span class="math inline">\(H\)</span> is quadratic in the velocity terms. Therefore we expect <span class="math inline">\(D^2 H\)</span> has constant velocity term, which only depends on relative positions.</p>
-<p><strong>Claim</strong>: The effective mass operator <span class="math inline">\(A\)</span> depends only on position, not velocity. I.e. <span class="math inline">\(D_v A =0\)</span>.</p>
-<p><strong>Claim</strong>: To prove the classical Hamiltonian is symplectic requires proving that <span class="math inline">\(D\phi\)</span> is a matrix of the form <span class="math display">\[D\phi = \begin{pmatrix} A &amp; B \\ C &amp; -{}^t A
-\end{pmatrix}\]</span> where <span class="math inline">\(B={}^tB\)</span> and <span class="math inline">\(C={}^tC\)</span> are symmetric. This is obvious from the classical formula $D = J D^2 H, $ where <span class="math display">\[JD^2 H =
-\begin{pmatrix} \nabla^2_{xv} H &amp; \nabla^2_{vv} H \\ -\nabla^2_{xx} H &amp; -\nabla^2_{vx} H
-\end{pmatrix}.\]</span> This condition is equivalent to the operator <span class="math inline">\(D \phi\)</span> being Hamiltonian in the sense of Lie algebras.</p>
-<p>We recall the identities <span class="math display">\[\nabla_v H = A v\]</span> and <span class="math display">\[\nabla^2_{xv} H = \text{grad}_x A . v.\]</span></p>
-<p><strong>Claim</strong>: We find <span class="math inline">\(DA. J \nabla H = D_x A . A v\)</span> and we argue that <span class="math inline">\(D_v A = 0\)</span>. This implies <span class="math inline">\(\nabla^2_{xv}H=\text{grad}_x A.v\)</span>.</p>
-<p><strong>Claim</strong>: We have <span class="math inline">\(\nabla^2_{vv} H = \text{grad}_{v} (Av) = A\)</span>. This implies an alternative explicit formula for <span class="math inline">\(A\)</span>.</p>
-<p>So we obtain the formula <span class="math display">\[D \phi = D_x A . Av + A J \nabla^2 H.\]</span> In the classical case <span class="math inline">\(A\)</span> is diagonal matrix which is independant of <span class="math inline">\(x\)</span>, hence <span class="math inline">\(D\phi\)</span> obviously satisfies the Hamiltonian Lie algebra conditions and integrates to a symplectic operator <span class="math inline">\(\Phi=\exp(\int D\phi)\)</span> on state space.</p>
-<p><em>Problem: Can we decide whether <span class="math inline">\(D \phi\)</span> is a Hamiltonian matrix (skew symmetric) with respect to some almost-complex structure <span class="math inline">\(\tilde{j}\)</span> on state space?</em></p>
-</section>
-<section id="textttwkdk-integrators-of-wh-equations" class="level2">
-<h2 class="anchored" data-anchor-id="textttwkdk-integrators-of-wh-equations"><span class="math inline">\(\texttt{WKDK}\)</span> Integrators of WH Equations</h2>
-<p>We want to numerically integrate the equations of motion such that Conservation of Energy is satisfied. The usual <span class="math inline">\(\texttt{solve\_ivp}\)</span> method is not sufficient. The classical Hamiltonian, with velocity-independant potential energy and position-independant kinetic energy, has a well-known symplectic integration scheme called Kick-Drift-Kick, c.f. “velocity Verlet” and “leapfrog Verlet” integrators. The basic idea of KDK is building the total Hamiltonian <span class="math inline">\(H=T+U\)</span> as a combination of <em>exact</em> solutions of <span class="math inline">\(H_U = U\)</span> and <span class="math inline">\(H_T=T\)</span>. Superposition of these exact solutions defines the KDK integration, and classically is a symplectic transformation on classical state space. In our WH equations of motion, there is no obvious symplectic structure, neither do the Weber Kick and Weber Drift steps admit <em>exact</em> solutions. We define <span class="math inline">\(\texttt{WeberKick}\)</span> and <span class="math inline">\(\texttt{WeberDrift}\)</span> updates corresponding to <span class="math inline">\(H_U\)</span>, <span class="math inline">\(H_T\)</span> respectively.</p>
-<section id="textttweberdrift" class="level3">
-<h3 class="anchored" data-anchor-id="textttweberdrift"><span class="math inline">\(\texttt{WeberDrift}\)</span></h3>
-<p>Formally consider the restricted Hamiltonian <span class="math inline">\(H_T = T = \frac{1}{2} \mu {\dot{r}}^2\)</span>. If we were studying particle states strictly with respect to Hamiltonian <span class="math inline">\(H_T\)</span>, then our method would approach the Hamilton equations by first considering the equation $ x’ = v = A_{inv} _v T $ as implicitly defining the inverse effective inertial mass operator <span class="math inline">\(A_{inv}\)</span> relative to <span class="math inline">\(H_T\)</span>. However for the purposes of numerical integration and Conservation of Energy, we rather define <span class="math inline">\(A_{inv}\)</span> to be the effective inertial mass operator relative to Weber’s total Hamiltonian <span class="math inline">\(H\)</span>. Therefore we define <span class="math display">\[A_{inv} = \texttt{minEnergySymmSolve}(\nabla_v H, v) = (\nabla^2_{vv} H)^{-1} .\]</span></p>
-<p>The second equation is <span class="math display">\[v' = a = -A_{inv} \nabla_x T=-(\nabla^2_{vv} H)^{-1}\nabla_x T\]</span> which defines the acceleration of the system. Classically this second equation is zero <span class="math inline">\(v'=x''=a=0\)</span>.</p>
-<p>Weber Drift consists of updating <span class="math display">\[x^* = x + \Delta t. A_{inv}. \nabla_vT \]</span> and <span class="math display">\[ v^* = v - \Delta t. A_{inv}. \nabla_x T .\]</span> These <span class="math inline">\(x^*, v^*\)</span> are only approximate solutions of the Hamiltonian <span class="math inline">\(H_T\)</span>. The choice of <span class="math inline">\(A_{inv}\)</span> implies <span class="math inline">\(T\)</span> is not strictly conserved. However in the composition WKDK this choice will improve stability.</p>
-<p>Remark. The classical drift step is the exact solution for systems with only kinetic energy, solving the equation of motion <span class="math inline">\(\dot{q} = p/m\)</span> in the classical notation. The solution describes uniform motion under constant momentum, which is a classical result of Newtonian mechanics, the so-called Principle of Inertia. Therefore in the absence of external force <span class="math inline">\(a=v'=0\)</span>, a particle moves uniformly with constant momentum. We remark that “inertial mass” is <em>not</em> defined by this Principle of Inertia.</p>
-</section>
-<section id="textttweberkick" class="level3">
-<h3 class="anchored" data-anchor-id="textttweberkick"><span class="math inline">\(\texttt{WeberKick}\)</span></h3>
-<p>The Weber Kick update arises from the Hamiltonian <span class="math inline">\(H_U = U\)</span>. Again we choose to define <span class="math inline">\(A_{inv}\)</span> as the inverse effective inertial mass operator defined relative to the total Weber Hamiltonian <span class="math inline">\(H\)</span>.</p>
-<p>We find <span class="math display">\[v'=a=- A_{inv} \nabla_x U.\]</span> The Weber Kick update consists of the approximate solution <span class="math display">\[x^* = x + \Delta t.A_{inv}\nabla_v U\]</span> and <span class="math display">\[v^* = v - \Delta t. A_{inv} . \nabla_x U.\]</span></p>
-<p>Remark. What choice of effective inertial mass should we choose? We think we need keep <span class="math inline">\(A_{inv}\)</span> equal to the effective inertial mass of the original total system, namely <span class="math display">\[A_{inv}:=\texttt{minEnergySymmSolve}(\nabla_v H, v)= \quad \quad \ldots \quad \quad = (\nabla^2_{vv} H)^{-1}.\]</span> In the classical KDK integrators, <span class="math inline">\(A_{inv}\)</span> is represented by the diagonal inverse mass operator <span class="math inline">\((\mu_i^{-1} Id_i)_i\)</span> and is constant during the KDK updates.</p>
-</section>
+<section id="velocity-independant-densities" class="level2">
+<h2 class="anchored" data-anchor-id="velocity-independant-densities">Velocity Independant Densities</h2>
+<p>We assume that <span class="math inline">\(f_{,v}=0\)</span> identically. Then the basic equation simplifies to <span class="math display">\[ (f~\mu_{\text{eff}}^{-1}~\frac{\alpha}{c^2x^2}+f_{,x}) v =0.\]</span> But the left hand side vanishes iff <span class="math display">\[f~\mu_{\text{eff}}^{-1}~\frac{\alpha}{c^2x^2}+f_{,x}=0,\]</span> which rearranges into the logarithmic derivative <span class="math display">\[d_x \log f = \frac{f_{,x}}{f} = -\mu_{\text{eff}}^{-1}~\frac{\alpha}{c^2 x^2}.\]</span> The definition of <span class="math inline">\(\mu_{\text{eff}}=\mu-\frac{\alpha}{c^2 x}\)</span> implies <span class="math display">\[d_x \log f = \frac{1}{x} + \frac{\beta}{1-\beta x}\]</span> where <span class="math inline">\(\beta:=\mu c^2 /\alpha\)</span>.</p>
+<p>Taking antiderivatives we find <span class="math display">\[\log f = \log x - \log (1-\beta x) + C =\log \frac{x}{1-\beta x}+C\]</span> where <span class="math inline">\(C\)</span> is a constant of integration.</p>
+<p>If we assume initial conditions <span class="math inline">\(f(1,v)=1\)</span> independantly of <span class="math inline">\(v\)</span>, then <span class="math inline">\(C=\log(1-\beta)\)</span>. Therefore <span class="math inline">\(f = (1-\beta) \frac{x}{1-\beta x}\)</span> is the unique solution of the basic equation such that <span class="math inline">\(f_{,v}=0\)</span> identically and <span class="math inline">\(f(1)=1\)</span>.</p>
+<p>Therefore we obtain:</p>
+<ul>
+<li><strong><em>Proposition:</em></strong> <em>The density</em> <span class="math display">\[\rho = (1-\beta)~\frac{x}{1-\beta x} ~dx dv\]</span> <em>is the unique invariant measure on state space <span class="math inline">\(\{(x,v)~~|~x&gt;0\}\)</span> which is velocity independant and satisfies</em> <span class="math inline">\(\rho(1,v)=1\)</span> <em>identically.</em></li>
+</ul>
+<p>We should emphasize that this derivation is somewhat specific to <span class="math inline">\(xv\)</span> being strictly a two-dimensional state space. For applications we are of course interested in <span class="math inline">\(N\)</span>-body electrodynamic systems, and this will be discussed in sequel.</p>
+<div id="cell-7" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>beta0 <span class="op">=</span> <span class="fl">.1</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>beta1<span class="op">=</span> <span class="op">-</span> <span class="dv">10</span><span class="op">**</span><span class="dv">2</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1000</span>, <span class="dv">100</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span><span class="dv">1</span><span class="op">-</span>  (<span class="dv">1</span><span class="op">-</span>beta0)<span class="op">*</span>x<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>beta0<span class="op">*</span>x)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>plt.plot(x, y)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2024-01-03-WeberGibbsLiouville_files/figure-html/cell-3-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>This post describes basic theory behind the python code which simulates the Weber <span class="math inline">\(N\)</span>-body electrodynamics. We have translated the python code to a different notebook.</p>
-<p>[-JHM]</p>
+<p>So we derive the invariant measure! This allows us to define the entropy of measures relative to <span class="math inline">\(\rho dxdv\)</span>. From here we can begin to study a Weberian approach to the Second “Law” of Thermodynamics.</p>
+<p>[ To be continued – JHM]</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

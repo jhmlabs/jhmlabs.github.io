@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="JHM">
-<meta name="dcterms.date" content="2025-03-28">
-<meta name="description" content="We review python and the Weber Hamilton equations of motion. All python code is omitted from this post, and will be presented in sequel. We review the construction of symplectic integrators adapted to the Weber Hamiltonian and WKDK integrators. Thus we obtain higher-order numerical solutions to WH equations of motion which satisfy Conservation of Energy to reasonably high accuracy.">
+<meta name="dcterms.date" content="2025-04-01">
+<meta name="description" content="Entropy, heat, and temperature all relate to work by this idea: that entropy and heat, following Clausius’ definition of entropy as equal to random kinetic energy, represents the loss of available productive work. This provides a Weber-Clausius thermodynamic definition of entropy depending on the random kinetic energies of the system.">
 
-<title>Python Weber Hamilton Computations – jhmlabs</title>
+<title>Weber, Clausius, Entropy, and Thermodynamics – jhmlabs</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,7 +23,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -146,17 +166,16 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Python Weber Hamilton Computations</h1>
+      <h1 class="title">Weber, Clausius, Entropy, and Thermodynamics</h1>
                   <div>
         <div class="description">
-          We review python and the Weber Hamilton equations of motion. All python code is omitted from this post, and will be presented in sequel. We review the construction of symplectic integrators adapted to the Weber Hamiltonian and WKDK integrators. Thus we obtain higher-order numerical solutions to WH equations of motion which satisfy Conservation of Energy to reasonably high accuracy.
+          Entropy, heat, and temperature all relate to work by this idea: that entropy and heat, following Clausius’ definition of entropy as equal to random kinetic energy, represents the loss of available productive work. This provides a Weber-Clausius thermodynamic definition of entropy depending on the random kinetic energies of the system.
         </div>
       </div>
                           <div class="quarto-categories">
-                <div class="quarto-category">algorithm</div>
-                <div class="quarto-category">python</div>
                 <div class="quarto-category">weber</div>
-                <div class="quarto-category">hamilton</div>
+                <div class="quarto-category">clausius</div>
+                <div class="quarto-category">entropy</div>
               </div>
                   </div>
   </div>
@@ -174,7 +193,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">March 28, 2025</p>
+        <p class="date">April 1, 2025</p>
       </div>
     </div>
     
@@ -193,73 +212,77 @@ window.Quarto = {
 
 
 
-<p>We have tried to write this article many times. We try again. The goal is write <span class="math inline">\(\texttt{python}\)</span> code simulating the Weber-Hamilton equations of motion for <span class="math inline">\(N\)</span>-body electrodynamic systems This is straightforward for classical Hamiltonians, but requires modification for Weber’s Hamiltonian. This post contains no <span class="math inline">\(\texttt{python}\)</span> code, all of which will be presented in future post. Here we review the theoretical aspects of the Weber <span class="math inline">\(\texttt{python}\)</span> notebooks.</p>
-<p>Key ingredients:</p>
-<ul>
-<li>We construct <span class="math inline">\(H\)</span> in python as the sum over all <span class="math inline">\(2\)</span>-body interactions.</li>
-<li>We compute the numerical gradients of <span class="math inline">\(H\)</span>.</li>
-<li>We use <span class="math inline">\(\texttt{minEnergySymmSolve}\)</span> to define effective inertial mass operators <span class="math inline">\(A\)</span>, although we do have alternative formula <span class="math inline">\(\nabla^2_{vv}H =A\)</span>.</li>
-<li>We review the symplecticity of classical Hamiltonian systems.</li>
-<li>We define <span class="math inline">\(\texttt{WeberKick}\)</span> and <span class="math inline">\(\texttt{WeberDrift}\)</span> updates, and construct <span class="math inline">\(\texttt{WKDK}\)</span> Leapfrog Verlet integrator.</li>
-<li>We review higher-order Trotter-Suzuki approximations, Forest-Ruth coefficients, and Yosida sixth order integrators of WH equations of motion.</li>
-<li>We rescale WH to simulate physical atomic scale.</li>
-</ul>
-<section id="computing-the-numerical-gradients-of-h" class="level2">
-<h2 class="anchored" data-anchor-id="computing-the-numerical-gradients-of-h">Computing the Numerical Gradients of <span class="math inline">\(H\)</span></h2>
-<p>The first problem is python coding the Hamiltonian <span class="math inline">\(H\)</span>. Weber is instantaneous action-at-a-distance, and a key hypothesis of Weber electrodynamics is that <span class="math inline">\(N\)</span>-body interactions are determined by the subset of <span class="math inline">\(2\)</span>-body subinteractions. Hence the total gradients of <span class="math inline">\(H\)</span> are computed recursively as sums over all <span class="math inline">\(2\)</span>-body pairs. Thus <span class="math display">\[H=\sum_{ij} H(p_i, p_j)\]</span> where the sum ranges over all pairs of distinct particles <span class="math inline">\(p_i, p_j\)</span>. In section below we construct the numerical Cartesian gradients <span class="math inline">\(\nabla_{x_i} H(p_i, p_j)\)</span> and <span class="math inline">\(\nabla_{v_i} H(p_i, p_j)\)</span> using the Newton epsilon limit definition. See the python functions <span class="math inline">\(\texttt{gradx(H,state)}\)</span> and <span class="math inline">\(\texttt{gradv(H,state)}\)</span> defined below. We find <span class="math inline">\(\nabla_{x_i} H= \sum'_j \nabla_{x_i} H(p_i, p_j)\)</span> and <span class="math inline">\(\nabla_{v_i} H= \sum'_j \nabla_{v_i} H(p_i, p_j).\)</span> We tried using <span class="math inline">\(\texttt{autograd}\)</span> package, but were more successful with explicit numerical approximations.</p>
+<section id="weber-clausius-entropy-and-thermodynamics" class="level2">
+<h2 class="anchored" data-anchor-id="weber-clausius-entropy-and-thermodynamics">Weber, Clausius, Entropy, and Thermodynamics</h2>
+<p>The classical reference for entropy is Clausius 1865 <span class="citation" data-cites="Clausius1865">(<a href="#ref-Clausius1865" role="doc-biblioref">Clausius 1865</a>)</span>, which introduces the term <span class="math inline">\(S\)</span> as <em>“the entropy of a body, from the Greek word ‘τροπή’ (transformation), because in the processes of nature this quantity always changes in a definite direction.”</em></p>
+<p>Clausius further states <em>“The energy of the universe is constant. The entropy of the universe tends to a maximum.”</em> This contains the principle of the First Law of Thermodynamics, and Clausius’ Second Law of Thermodynamics. .</p>
+<section id="deriving-first-law-of-thermodynamics-from-mechanics-and-conservation-of-energy" class="level3">
+<h3 class="anchored" data-anchor-id="deriving-first-law-of-thermodynamics-from-mechanics-and-conservation-of-energy">Deriving First Law of Thermodynamics from Mechanics and Conservation of Energy</h3>
+<p>In Gibbs’ book <span class="citation" data-cites="Gibbs1902">(<a href="#ref-Gibbs1902" role="doc-biblioref">Gibbs 1902</a>)</span> we find the problem of deriving the First Law of Thermodynamics from mechanics, namely <span class="math display">\[ dU = TdS - \sum F dx\]</span> where <span class="math inline">\(W=\sum Fdx\)</span> represents work on the mechanical system, and <span class="math inline">\(dU\)</span> represents the change of internal potential energy of the system. Many references describe the First Law as represented by <span class="math inline">\(dU = T dS - PdV\)</span> where <span class="math inline">\(PdV\)</span> represents pressure across the change in volume. This latter term is equivalent to the work performed by the pressure along the boundary of the volume. Note pressure is defined only along the boundary of the volume in the above expression.</p>
+<p>We derive the First Law of Thermodynamics from Weberian mechanics as follows.</p>
+<p>First recall the primary equation of classical mechanics, namely Newton’s <span class="math inline">\(F=F_{local}=ma\)</span>, which we rewrite as <span class="math inline">\(F_{local}-ma=0\)</span>. This latter step is simple and important. It suggests replacing <span class="math inline">\(F_{local}\)</span> the sum of all forces acting on <span class="math inline">\(x\)</span> with the sum of all forces acting on <span class="math inline">\(x\)</span> in the universe <span class="math inline">\(F=F_{local}+F_{nonlocal}\)</span>. Thus we replace <span class="math inline">\(F_{local}-ma=0\)</span> with the equation of <em>dynamic equilibrium</em> <span class="math display">\[\sum F=0.\]</span></p>
+<p>This balance of forces becomes the primary law of mechanics. It includes the equations of Newtonian mechanics by explaining the <em>mass acceleration term</em> <span class="math inline">\(-ma\)</span> as equal to the <em>nonlocal</em> force <span class="math inline">\(F\)</span> exerted by the universe at infinity on <span class="math inline">\(x\)</span>. We experience inertial masses as constant because the universe at infinity is basically constant on average in our reference frame. The sky at infinity does not move that much relative to our frame. This is a form of Mach’s principle that inertial mass is defined by our motion relative to the stars at infinity <span class="citation" data-cites="Mach1883">(<a href="#ref-Mach1883" role="doc-biblioref">Mach 1883</a>)</span>. See Halton Arp’s <a href="https://www.youtube.com/watch?v=eyREfCOr-Y0">lecture on intrinsic red shift</a>.</p>
+<p>The Principle of Dynamic Equilibrium can equivalently be expressed as the Principle of Zero Energy <span class="math inline">\(\sum U = 0\)</span>. We emphasize that this expression represents the sum of all local and nonlocal interaction energies. This means energy is conserved globally at all times, but locally varies according to <span class="math inline">\(\Delta U_{local} = -\Delta U_{nonlocal}\)</span>. Stability of nonlocal interaction potential yields the usual Conservation of Energy of closed systems. Therefore energy can be created and destroyed locally, but the sum over all interactions is zero. “The only constant is everything adds up to zero.”</p>
 </section>
-<section id="weber-hamilton-equations-of-motion" class="level2">
-<h2 class="anchored" data-anchor-id="weber-hamilton-equations-of-motion">Weber-Hamilton Equations of Motion</h2>
-<p>In the above python code we have obtained the space gradient <span class="math inline">\(\nabla_x H\)</span> and velocity gradient <span class="math inline">\(\nabla_v H\)</span>. The next step is simulating the Weber-Hamilton equations of motion.</p>
-<p>Recall the effective mass operator <span class="math inline">\(A\)</span> which we define as the minimal energy symmetric operator <span class="math inline">\(A\)</span> satisfying <span class="math display">\[x'= v= A^{-1} \nabla_v H.\]</span> The Weber-Hamilton equations of motion is represented by the ODE <span class="math display">\[(x', v') = (A^{-1}.\nabla_v H, -A^{-1}. \nabla_x H).\]</span> The hypothesis that <span class="math inline">\(A\)</span> is symmetric and solves WH equations implies Conservation of Energy is satisfied. Thus we look to numerically compute the operator <span class="math display">\[A_{\text{inv}}:=\texttt{minEnergySymmSolve}(\nabla_v H,v).\]</span></p>
-<p>Given the effective mass operator <span class="math inline">\(A_{\text{inv}}\)</span>, the acceleration of the system is defined by <span class="math display">\[a=v'=-A_{\text{inv}}. \nabla_x H.\]</span> Thus we compute the accelerations in the given Cartesian coordinates. This makes the WH equations explicit.</p>
-<p><em>What are our options for solving WH equations of motion?</em></p>
-<p>The first principle is that our integrators must satisfy Conservation of Energy. For classical Hamiltonian equations, energy conservation is preserved by the symplectic KDK (“Kick-Drift-Kick”) integrators. But these symplectic integrators are not immediately applicable to the WH equations. In section below we introduce the WKDK integrators (Weber Kick-Drift-Kick).</p>
-<p>Remark. We observe that <span class="math inline">\(\nabla_v H=0\)</span> only if <span class="math inline">\(v=0\)</span>. Therefore <span class="math inline">\(A_{\text{inv}}\)</span> is well defined even when <span class="math inline">\(\nabla_v H=0\)</span>, with the zero operator being the unique min energy solution mapping <span class="math inline">\(A.0=0\)</span>.</p>
+<section id="entropy-is-random-kinetic-energy-work-is-parallel-coherent-kinetic-energy." class="level3">
+<h3 class="anchored" data-anchor-id="entropy-is-random-kinetic-energy-work-is-parallel-coherent-kinetic-energy.">Entropy is Random Kinetic Energy, Work is Parallel Coherent Kinetic Energy.</h3>
+<p>The Weberian perspective on thermodynamics is that energy strictly manifests in two forms: potential <span class="math inline">\(U\)</span> and kinetic <span class="math inline">\(T\)</span>. Weber defines potential as the potential for productive work, i.e.&nbsp;the potential for matter to be put in linear parallel motion having kinetic energy. Here “work” means applying a force to an object in a linear motion, i.e.&nbsp;apply a force through a distance. Thus <em>work consists of matter being put into relative motion.</em></p>
+<p>The distinction belonging to the First Law of Thermodynamics is that matter in motion, can be decomposed into “Random” plus “NonRandom” motion. The Random motion is incoherent and does not add to any large scale bulk linear motion. The parallel part of the kinetic energy is that part of the motion which results in productive work. The random incoherent part is the entropy expression represented by the term “<span class="math inline">\(T.dS\)</span>” as we propose below.</p>
+<p>The internal potential energy of a system is extracted by the environment into work, but this work is not necessarily coherent nor productive. That part of the work which is unproductive is represented by the entropy term and repesents random KE. This represents the Clausius kinetic view on entropy and temperature.</p>
+<p>The thermodynamic definition of Temperature is according to the formula <span class="math display">\[T=\frac{\partial U}{\partial S}\]</span> of the two extensive variables <span class="math inline">\(U, S\)</span> of potential energy and entropy, respectively. There is interesting remark in [BBC, In Our Time, Science, Episode on Heat] which gives the Scottish Glaswegian definition of entropy as representing the loss of available work, or in our terms, the loss of available productive work in a system. Thus entropy represents that part of the kinetic energy which is random and adds up incoherently to zero, and represents that part of kinetic energy which does not contribute to the productive work performed by the system.</p>
+<p>The thermodynamic variables <span class="math inline">\(U,S\)</span> are extensive with respect to a system <span class="math inline">\(X\)</span> in the sense that they are <span class="math inline">\(1\)</span>-homogeneous with respect to the state variables. The ratio <span class="math inline">\(T = dU/dS\)</span> implies <span class="math inline">\(T\)</span> is an intensive variable (<span class="math inline">\(0\)</span>-homogeneous with respect to state variables) designating “temperature” (and not kinetic energy per the usual notation). This amounts to the Zeroth Law of Thermodynamics. But it still begs the question <em>“how to represent the random kinetic energy?”</em></p>
+<p>Remark. The 19th and 20th century had a broader heterogeneous view of energy and energy radiation, e.g.&nbsp;photon radiation, gravitational radiation, electromagnetic, etc.. The Weber perspective, by contrast, follows Ampere’s original idea that primary laws of physics need be homogeneous. Thus Weber explains all forms of energy transfer as various expressions of a homogeneous system of energy transfer, namely between potential and kinetic energy according to Weber electrodynamics.</p>
 </section>
-<section id="remark-on-classical-symplectic-flows" class="level2">
-<h2 class="anchored" data-anchor-id="remark-on-classical-symplectic-flows">Remark on Classical Symplectic Flows</h2>
-<p>We are given an ODE <span class="math inline">\(x'=\phi(t,x)\)</span>. Concretely we study <span class="math inline">\(x' = A^{-1} J \nabla H\)</span>. The forward time evolution <span class="math inline">\(\Phi=\Phi_t\)</span> map gives the time <span class="math inline">\(t\)</span> solution of the IVP <span class="math inline">\(x'=\phi(t,x)\)</span>, <span class="math inline">\(x'(0)=t_0\)</span> at time <span class="math inline">\(t\)</span>. The evolution map <span class="math inline">\(\Phi\)</span> has Jacobian defined by <span class="math display">\[J=D_x \Phi.\]</span> Differentiating the ODE system we find <span class="math inline">\(J\)</span> satisfies <span class="math display">\[\frac{d}{dt} J = D_x \phi.\]</span> This is a linear system of ODEs with solution <span class="math display">\[J=J(t) = \text{exp}(\int_{t_0}^t D \phi d\tau) .\]</span> Here <span class="math inline">\(\text{exp}\)</span> denotes matrix exponential.</p>
-<p>Product rule implies <span class="math inline">\(D\phi = D (A J. \nabla H) = (DA)J \nabla H + AJ. D^2 H\)</span>.</p>
-<p>We note that <span class="math inline">\(DA\)</span> consists of the tensor object <span class="math inline">\((\frac{\partial}{\partial x_i^j}A )_{ij}\)</span>. This tensor is multiplied by <span class="math inline">\(J \nabla H\)</span> with equal indices <span class="math inline">\(ij\)</span> and we obtain a square matrix <span class="math inline">\(DA. J \nabla H\)</span>.</p>
-<p><strong>Claim</strong>: The Hamiltonian <span class="math inline">\(H\)</span> is quadratic in the velocity terms. Therefore we expect <span class="math inline">\(D^2 H\)</span> has constant velocity term, which only depends on relative positions.</p>
-<p><strong>Claim</strong>: The effective mass operator <span class="math inline">\(A\)</span> depends only on position, not velocity. I.e. <span class="math inline">\(D_v A =0\)</span>.</p>
-<p><strong>Claim</strong>: To prove the classical Hamiltonian is symplectic requires proving that <span class="math inline">\(D\phi\)</span> is a matrix of the form <span class="math display">\[D\phi = \begin{pmatrix} A &amp; B \\ C &amp; -{}^t A
-\end{pmatrix}\]</span> where <span class="math inline">\(B={}^tB\)</span> and <span class="math inline">\(C={}^tC\)</span> are symmetric. This is obvious from the classical formula $D = J D^2 H, $ where <span class="math display">\[JD^2 H =
-\begin{pmatrix} \nabla^2_{xv} H &amp; \nabla^2_{vv} H \\ -\nabla^2_{xx} H &amp; -\nabla^2_{vx} H
-\end{pmatrix}.\]</span> This condition is equivalent to the operator <span class="math inline">\(D \phi\)</span> being Hamiltonian in the sense of Lie algebras.</p>
-<p>We recall the identities <span class="math display">\[\nabla_v H = A v\]</span> and <span class="math display">\[\nabla^2_{xv} H = \text{grad}_x A . v.\]</span></p>
-<p><strong>Claim</strong>: We find <span class="math inline">\(DA. J \nabla H = D_x A . A v\)</span> and we argue that <span class="math inline">\(D_v A = 0\)</span>. This implies <span class="math inline">\(\nabla^2_{xv}H=\text{grad}_x A.v\)</span>.</p>
-<p><strong>Claim</strong>: We have <span class="math inline">\(\nabla^2_{vv} H = \text{grad}_{v} (Av) = A\)</span>. This implies an alternative explicit formula for <span class="math inline">\(A\)</span>.</p>
-<p>So we obtain the formula <span class="math display">\[D \phi = D_x A . Av + A J \nabla^2 H.\]</span> In the classical case <span class="math inline">\(A\)</span> is diagonal matrix which is independant of <span class="math inline">\(x\)</span>, hence <span class="math inline">\(D\phi\)</span> obviously satisfies the Hamiltonian Lie algebra conditions and integrates to a symplectic operator <span class="math inline">\(\Phi=\exp(\int D\phi)\)</span> on state space.</p>
-<p><em>Problem: Can we decide whether <span class="math inline">\(D \phi\)</span> is a Hamiltonian matrix (skew symmetric) with respect to some almost-complex structure <span class="math inline">\(\tilde{j}\)</span> on state space?</em></p>
+<section id="principle-of-minimal-internal-potential-energy" class="level3">
+<h3 class="anchored" data-anchor-id="principle-of-minimal-internal-potential-energy">Principle of Minimal Internal Potential Energy</h3>
+<p>Water flows.</p>
+<p>Water flows wherever it has the opportunity to flow.</p>
+<p>Water will flow whenever it can flow.</p>
+<p>Water never forfeits the opportunity to flow.</p>
+<p>This is like electrical discharges. All the potential at high voltage exists, but it does not discharge without a conducting path, without an opportunity. Moreover it immediately discharges <em>if</em> there is a conducting path.</p>
+<p>This surprises us sometimes. It accounts for the particular direction of time in our opinion. We remind the reader that we take the Machian perspective of time as “matter in motion” <span class="citation" data-cites="Mach1883">(<a href="#ref-Mach1883" role="doc-biblioref">Mach 1883</a>)</span>.</p>
+<p><em>Where did we first learn of this idea? We can’t recall…</em></p>
+<p>The principle of minimal internal potential energy expresses the idea that any system <span class="math inline">\(X\)</span> in an environment <span class="math inline">\(E\)</span> will have all its available capacity for work extracted by the environment. We are reminded of a scene at UofT, an old Soviet era professor saying, “Well, if there was any object [X], then it’s gone they stole it.” Once we know the environment has a positive need and demand for work, then it’s clear that any available potential energy will be extracted by the environment. This is why the hot cup of coffee becomes cold. It’s subject to the environment. We are always competing with the environment, which looks to seize upon all available potential and translate this energy into incoherent kinetic energies which have no bulk state of motion. If one leaves potential energy subject to the environment, it is almost certainly gone when we come back.</p>
+<p>To belabour the point yet further, consider the basic so-called law of supply and demand. The law includes the proposition that wherever there is supply, and wherever there is demand, there is also the <em>transfer</em> of the goods. This represents our basic idea about the Principle of Minimal Potential Energy. It is a property of the external environment. The internal potential energy is only minimized to the extent that the environment can absorb this potential and translate it into kinetic energy (either random or coherent).</p>
+<p>Basic thermodynamics states that entropy <span class="math inline">\(S\)</span> is defined as the Fenchel-Legendre transform <span class="math inline">\(S=U^*\)</span> of the potential energy. Therefore the entropy <span class="math inline">\(S\)</span> is maximized wherever the potential energy is minimized according to the constraints. Compare <span class="citation" data-cites="Cullen1969">(<a href="#ref-Cullen1969" role="doc-biblioref">Cullen 1969</a>)</span>.</p>
+<p>A similar idea is that minimum potential energy is equivalent to maximal environmental extraction of work. If a system has the potential to do productive work, and the environment has a need for productive energy, then the environment <em>will</em> extract the energy and convert into KE. This is the idea that water flows and will flow. Therefore states with some initial potential energy will have this potential converted into kinetic energy at the first environmental opportunity. A state always reduces to a ground state, relative to the environment, after the environment has extracted the maximal amount of productive work from the system’s potential.</p>
+<p>Test Question: Why does temperature <span class="math inline">\(T\)</span> flow from hot to cold? Why is there strictly monotone flow of thermal energy? What can we predict about the asypmptotic temperature distributions in closed systems, can we predict the homogenization? The equilibration of temperatures in a closed system is equivalent to sayng the random kinetic energies of all particles eventually become equidistributed, i.e.&nbsp;they all become equally random in magnitude. [insert proof]</p>
+<p>Idea: KE is expansive and interactive. KE seems very good at distributing and equilibriating. [c.f. Equipartition of Energy].</p>
+<p>Clausius Statement: <em>“Heat cannot spontaneously flow from a colder body to a hotter body without external work being done.”</em></p>
+<p>How is this interpreted by Weber? We have two bodies <span class="math inline">\(B_1\)</span> and <span class="math inline">\(B_2\)</span>, say <span class="math inline">\(B_2\)</span> is the environment. Suppose that the random KE of <span class="math inline">\(B_1\)</span> is less than the random KE of <span class="math inline">\(B_2\)</span>. Then Clausius says there is a definite transfer of KE from <span class="math inline">\(B_2\)</span> to <span class="math inline">\(B_1\)</span> in the absence of any external work. Contrapositively, there is no transfer of heat (random KE) from <span class="math inline">\(B_1\)</span> to <span class="math inline">\(B_2\)</span> without external work.</p>
 </section>
-<section id="textttwkdk-integrators-of-wh-equations" class="level2">
-<h2 class="anchored" data-anchor-id="textttwkdk-integrators-of-wh-equations"><span class="math inline">\(\texttt{WKDK}\)</span> Integrators of WH Equations</h2>
-<p>We want to numerically integrate the equations of motion such that Conservation of Energy is satisfied. The usual <span class="math inline">\(\texttt{solve\_ivp}\)</span> method is not sufficient. The classical Hamiltonian, with velocity-independant potential energy and position-independant kinetic energy, has a well-known symplectic integration scheme called Kick-Drift-Kick, c.f. “velocity Verlet” and “leapfrog Verlet” integrators. The basic idea of KDK is building the total Hamiltonian <span class="math inline">\(H=T+U\)</span> as a combination of <em>exact</em> solutions of <span class="math inline">\(H_U = U\)</span> and <span class="math inline">\(H_T=T\)</span>. Superposition of these exact solutions defines the KDK integration, and classically is a symplectic transformation on classical state space. In our WH equations of motion, there is no obvious symplectic structure, neither do the Weber Kick and Weber Drift steps admit <em>exact</em> solutions. We define <span class="math inline">\(\texttt{WeberKick}\)</span> and <span class="math inline">\(\texttt{WeberDrift}\)</span> updates corresponding to <span class="math inline">\(H_U\)</span>, <span class="math inline">\(H_T\)</span> respectively.</p>
-<section id="textttweberdrift" class="level3">
-<h3 class="anchored" data-anchor-id="textttweberdrift"><span class="math inline">\(\texttt{WeberDrift}\)</span></h3>
-<p>Formally consider the restricted Hamiltonian <span class="math inline">\(H_T = T = \frac{1}{2} \mu {\dot{r}}^2\)</span>. If we were studying particle states strictly with respect to Hamiltonian <span class="math inline">\(H_T\)</span>, then our method would approach the Hamilton equations by first considering the equation $ x’ = v = A_{inv} _v T $ as implicitly defining the inverse effective inertial mass operator <span class="math inline">\(A_{inv}\)</span> relative to <span class="math inline">\(H_T\)</span>. However for the purposes of numerical integration and Conservation of Energy, we rather define <span class="math inline">\(A_{inv}\)</span> to be the effective inertial mass operator relative to Weber’s total Hamiltonian <span class="math inline">\(H\)</span>. Therefore we define <span class="math display">\[A_{inv} = \texttt{minEnergySymmSolve}(\nabla_v H, v) = (\nabla^2_{vv} H)^{-1} .\]</span></p>
-<p>The second equation is <span class="math display">\[v' = a = -A_{inv} \nabla_x T=-(\nabla^2_{vv} H)^{-1}\nabla_x T\]</span> which defines the acceleration of the system. Classically this second equation is zero <span class="math inline">\(v'=x''=a=0\)</span>.</p>
-<p>Weber Drift consists of updating <span class="math display">\[x^* = x + \Delta t. A_{inv}. \nabla_vT \]</span> and <span class="math display">\[ v^* = v - \Delta t. A_{inv}. \nabla_x T .\]</span> These <span class="math inline">\(x^*, v^*\)</span> are only approximate solutions of the Hamiltonian <span class="math inline">\(H_T\)</span>. The choice of <span class="math inline">\(A_{inv}\)</span> implies <span class="math inline">\(T\)</span> is not strictly conserved. However in the composition WKDK this choice will improve stability.</p>
-<p>Remark. The classical drift step is the exact solution for systems with only kinetic energy, solving the equation of motion <span class="math inline">\(\dot{q} = p/m\)</span> in the classical notation. The solution describes uniform motion under constant momentum, which is a classical result of Newtonian mechanics, the so-called Principle of Inertia. Therefore in the absence of external force <span class="math inline">\(a=v'=0\)</span>, a particle moves uniformly with constant momentum. We remark that “inertial mass” is <em>not</em> defined by this Principle of Inertia.</p>
-</section>
-<section id="textttweberkick" class="level3">
-<h3 class="anchored" data-anchor-id="textttweberkick"><span class="math inline">\(\texttt{WeberKick}\)</span></h3>
-<p>The Weber Kick update arises from the Hamiltonian <span class="math inline">\(H_U = U\)</span>. Again we choose to define <span class="math inline">\(A_{inv}\)</span> as the inverse effective inertial mass operator defined relative to the total Weber Hamiltonian <span class="math inline">\(H\)</span>.</p>
-<p>We find <span class="math display">\[v'=a=- A_{inv} \nabla_x U.\]</span> The Weber Kick update consists of the approximate solution <span class="math display">\[x^* = x + \Delta t.A_{inv}\nabla_v U\]</span> and <span class="math display">\[v^* = v - \Delta t. A_{inv} . \nabla_x U.\]</span></p>
-<p>Remark. What choice of effective inertial mass should we choose? We think we need keep <span class="math inline">\(A_{inv}\)</span> equal to the effective inertial mass of the original total system, namely <span class="math display">\[A_{inv}:=\texttt{minEnergySymmSolve}(\nabla_v H, v)= \quad \quad \ldots \quad \quad = (\nabla^2_{vv} H)^{-1}.\]</span> In the classical KDK integrators, <span class="math inline">\(A_{inv}\)</span> is represented by the diagonal inverse mass operator <span class="math inline">\((\mu_i^{-1} Id_i)_i\)</span> and is constant during the KDK updates.</p>
+<section id="remark-on-shannon-entropy-and-thermodynamic-entropy" class="level3">
+<h3 class="anchored" data-anchor-id="remark-on-shannon-entropy-and-thermodynamic-entropy">Remark on Shannon Entropy and Thermodynamic Entropy</h3>
+<p>The Shannon information entropy is basically <span class="math inline">\(\log(\text{number of states})\)</span>. If a physical system has high entropy, then there is alot of random KE and the positions and velocities of any particles cannot be known with any certainty. On average the magnitude of the velocities might be known, but the direction and position of these particles will not be known. The information about the position and velocities has alot of random variation, as determined by the random KE, and this corresponds to information uncertainty.</p>
 </section>
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>This post describes basic theory behind the python code which simulates the Weber <span class="math inline">\(N\)</span>-body electrodynamics. We have translated the python code to a different notebook.</p>
-<p>[-JHM]</p>
+<p>We end with some questions. This post is contains our initial notes on Weber-Clausius entropy. Some concluding questions:</p>
+<ol type="1">
+<li><p>Where is the Second Law of Thermodynamics in our discussion? The basic reference is Clausius’. Standard reference is that Second Law states <span class="math inline">\(T dS \geq \delta Q\)</span> in an isolated system. I.e. <span class="math inline">\(dU = T dS \geq \delta Q\)</span> for every isolated system. This implies that entropy is always increasing in any isolated system. <span class="citation" data-cites="Clausius1865">(<a href="#ref-Clausius1865" role="doc-biblioref">Clausius 1865</a>)</span> What is the Weber mechanics explanation?</p></li>
+<li><p>The Clausius entropy says that work cannot be performed by a machine which does not have a cold sink. How does Weber mechanics interpret this idea? The Weber viewpoint implies that entropy always involves heat and thermal energy, which ex definitio, is random kinetic energy. This amounts to the increase in average kinetic energy in the environment.</p></li>
+<li><p>What is <em>random</em> kinetic energy? We interpret this random KE that part of kinetic energy which does not contribute to the parallel linear kinetic energy of the system. By definition it is nonparallel (random incoherent).</p></li>
+</ol>
+
 
 
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-Clausius1865" class="csl-entry" role="listitem">
+Clausius, Rudolf. 1865. <span>“On the Mechanical Theory of Heat: With Its Applications to the Steam-Engine and to Physical Properties of Bodies.”</span> <em>Philosophical Magazine</em> 30 (202): 1–44. <a href="https://doi.org/10.1080/14786446508643741">https://doi.org/10.1080/14786446508643741</a>.
+</div>
+<div id="ref-Cullen1969" class="csl-entry" role="listitem">
+Cullen, William A. 1969. <em>The Principles of Thermodynamics</em>. Oxford: Oxford University Press.
+</div>
+<div id="ref-Gibbs1902" class="csl-entry" role="listitem">
+Gibbs, J. Willard. 1902. <em>Elementary Principles in Statistical Mechanics: Developed with Especial Reference to the Rational Foundation of Thermodynamics</em>. New York: Charles Scribner’s Sons. <a href="https://archive.org/details/elementaryprinci00gibb">https://archive.org/details/elementaryprinci00gibb</a>.
+</div>
+<div id="ref-Mach1883" class="csl-entry" role="listitem">
+Mach, Ernst. 1883. <em>Die Mechanik in Ihrer Entwickelung: The Science of Mechanics</em>. Leipzig: F.A. Brockhaus. <a href="https://archive.org/details/diemechanikinih00machgoog">https://archive.org/details/diemechanikinih00machgoog</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
