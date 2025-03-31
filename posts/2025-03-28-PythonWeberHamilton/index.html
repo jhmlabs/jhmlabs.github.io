@@ -206,7 +206,7 @@ window.Quarto = {
 </ul>
 <section id="computing-the-numerical-gradients-of-h" class="level2">
 <h2 class="anchored" data-anchor-id="computing-the-numerical-gradients-of-h">Computing the Numerical Gradients of <span class="math inline">\(H\)</span></h2>
-<p>The first problem is python coding the Hamiltonian <span class="math inline">\(H\)</span>. Weber is instantaneous action-at-a-distance. A key hypothesis of Weber electrodynamics is that <span class="math inline">\(N\)</span>-body interactions are determined by the set of all <span class="math inline">\(2\)</span>-body subinteractions. Hence the total gradients of <span class="math inline">\(H\)</span> are computed recursively as sums over all <span class="math inline">\(2\)</span>-body pairs. Thus <span class="math display">\[H=\sum'_{ij} H(p_i, p_j)\]</span> is the sum over all pairs of distinct particles <span class="math inline">\(p_i, p_j\)</span>. In section below we construct the numerical Cartesian gradients <span class="math inline">\(\nabla_{x_i} H(p_i, p_j)\)</span> and <span class="math inline">\(\nabla_{v_i} H(p_i, p_j)\)</span> using the Newton epsilon limit definition. See the python functions <span class="math inline">\(\texttt{gradx(H,state)}\)</span> and <span class="math inline">\(\texttt{gradv(H,state)}\)</span> defined below. We find <span class="math inline">\(\nabla_{x_i} H= \sum'_j \nabla_{x_i} H(p_i, p_j)\)</span> and <span class="math inline">\(\nabla_{v_i} H= \sum'_j \nabla_{v_i} H(p_i, p_j).\)</span> We express the gradient using the computational identity <span class="math display">\[\texttt{grad(H, state) = [sum([numgrad(H, pi,pj) for pj in state if i,j distinct]) for pi in state]}.\]</span> We tried using <span class="math inline">\(\texttt{autograd}\)</span> package, but were more successful with explicit numerical approximations.</p>
+<p>The first problem is python coding the Hamiltonian <span class="math inline">\(H\)</span>. Weber is instantaneous action-at-a-distance, and a key hypothesis of Weber electrodynamics is that <span class="math inline">\(N\)</span>-body interactions are determined by the subset of <span class="math inline">\(2\)</span>-body subinteractions. Hence the total gradients of <span class="math inline">\(H\)</span> are computed recursively as sums over all <span class="math inline">\(2\)</span>-body pairs. Thus <span class="math display">\[H=\sum_{ij} H(p_i, p_j)\]</span> where the sum ranges over all pairs of distinct particles <span class="math inline">\(p_i, p_j\)</span>. In section below we construct the numerical Cartesian gradients <span class="math inline">\(\nabla_{x_i} H(p_i, p_j)\)</span> and <span class="math inline">\(\nabla_{v_i} H(p_i, p_j)\)</span> using the Newton epsilon limit definition. See the python functions <span class="math inline">\(\texttt{gradx(H,state)}\)</span> and <span class="math inline">\(\texttt{gradv(H,state)}\)</span> defined below. We find <span class="math inline">\(\nabla_{x_i} H= \sum'_j \nabla_{x_i} H(p_i, p_j)\)</span> and <span class="math inline">\(\nabla_{v_i} H= \sum'_j \nabla_{v_i} H(p_i, p_j).\)</span> We express the gradient using the computational identity <span class="math inline">\(\texttt{grad(H, state)\)</span> <span class="math inline">\(= [sum([numgrad(H, pi,pj) for pj in state if i,j distinct]) for pi in state]}.\)</span> We tried using <span class="math inline">\(\texttt{autograd}\)</span> package, but were more successful with explicit numerical approximations.</p>
 </section>
 <section id="weber-hamilton-equations-of-motion" class="level2">
 <h2 class="anchored" data-anchor-id="weber-hamilton-equations-of-motion">Weber-Hamilton Equations of Motion</h2>
@@ -253,14 +253,8 @@ window.Quarto = {
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>This post describes basic theory behind the python code which simulates the Weber <span class="math inline">\(N\)</span>-body electrodynamics. We have translated the python code to a different notebook. A few tasks remai.</p>
-<ul>
-<li>3D plot evolution of N-body systems.</li>
-<li>Plot a two-body simulation and demonstrate orbital recession.</li>
-<li>Positronium simulation?</li>
-<li>Six-body simulations and Weber-Sansbury atomic models.</li>
-<li>Trotter-Suzuki Decompositions, formulae for exponentials of noncommuting operators, higher-order integrators.</li>
-</ul>
+<p>This post describes basic theory behind the python code which simulates the Weber <span class="math inline">\(N\)</span>-body electrodynamics. We have translated the python code to a different notebook.</p>
+<p>[-JHM]</p>
 
 
 </section>
