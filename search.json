@@ -32,7 +32,7 @@
     "href": "posts/2026-09-05-NavierMolecular/index.html#uniqueness-existence-of-smooth-solutions-given-smooth-initial-datum",
     "title": "Introducing the Navier-Weber Equations",
     "section": "Uniqueness, Existence of Smooth Solutions given Smooth Initial Datum?",
-    "text": "Uniqueness, Existence of Smooth Solutions given Smooth Initial Datum?\nWe do not know enough of the standard regularity theory to begin to approach these questions."
+    "text": "Uniqueness, Existence of Smooth Solutions given Smooth Initial Datum?\nThe usual regularity theory would imply Uniqueness and Existence of Smooth Solutions given smooth initial datum if:\n\nWe establish an a priori bound on \\(\\nabla u\\). In fact the Navier-Weber equations are a conservative Hamiltonian system, which implies that \\(||\\nabla u||_{L^2}\\) is bounded globally for all time \\(t&gt;0\\).\nThe visoelastic tensor \\(\\mathbb{V}\\) is postive semidefinite for all time \\(t &gt;0\\). Positive semi-definiteness means the inductive resistance always opposes the change that produced it (a physical analogue to Lenz’s law). When a local region of fluid undergoes rapid acceleration, the reciprocal molecular forces generate an internal “added mass” or “inertial drag” that smooths out velocity fluctuations. This positive semidefiniteness prevents sharp gradient shocks from concentrating, and shields the fluid from finite-time singularities."
   },
   {
     "objectID": "posts/2026-09-05-NavierMolecular/index.html#finite-time-blow-ups",
