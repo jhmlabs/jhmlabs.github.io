@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="JHM">
-<meta name="dcterms.date" content="2024-06-06">
-<meta name="description" content="We suggest replacing the Laplace spectrum on noncompact arithmetic spaces with the Steklov spectrum defined by the Dirichlet-to-Neumann map on rational Gamma-equivariant bordifications X[t] of X. The Steklov spectrum simplifies many problems. For example we readily obtain discrete spectrum, avoiding all complications of discrete versus continuous spectra of Laplacians. Our definition also suggests a Steklov-Selberg trace formula and a Steklov Fundamental Lemma, with almost trivial proofs. This foundational distinction on Steklov spectrum is perhaps an interesting alternative approach to the Langlands Programme.">
+<meta name="dcterms.date" content="2026-09-07">
+<meta name="description" content="We introduce the conservative Navier-Weber electrodynamic fluid model, based on Navier’s 1822 memoir and Weber’s electrodynamic force law.">
 
-<title>Steklov Spectrum of Arithmetic Symmetric Spaces – jhmlabs</title>
+<title>Introducing the Navier-Weber Equations – jhmlabs</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,27 +23,7 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -166,19 +146,13 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Steklov Spectrum of Arithmetic Symmetric Spaces</h1>
+      <h1 class="title">Introducing the Navier-Weber Equations</h1>
                   <div>
         <div class="description">
-          We suggest replacing the Laplace spectrum on noncompact arithmetic spaces with the Steklov spectrum defined by the Dirichlet-to-Neumann map on rational Gamma-equivariant bordifications <span class="math inline">\(X[t]\)</span> of <span class="math inline">\(X\)</span>. The Steklov spectrum simplifies many problems. For example we readily obtain discrete spectrum, avoiding all complications of discrete versus continuous spectra of Laplacians. Our definition also suggests a Steklov-Selberg trace formula and a Steklov Fundamental Lemma, with almost trivial proofs. This foundational distinction on Steklov spectrum is perhaps an interesting alternative approach to the Langlands Programme.
+          We introduce the conservative Navier-Weber electrodynamic fluid model, based on Navier’s 1822 memoir and Weber’s electrodynamic force law.
         </div>
       </div>
-                          <div class="quarto-categories">
-                <div class="quarto-category">steklov</div>
-                <div class="quarto-category">langlands</div>
-                <div class="quarto-category">selberg</div>
-                <div class="quarto-category">trace</div>
-              </div>
-                  </div>
+                </div>
   </div>
     
   
@@ -194,7 +168,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">June 6, 2024</p>
+        <p class="date">September 7, 2026</p>
       </div>
     </div>
     
@@ -213,59 +187,35 @@ window.Quarto = {
 
 
 
-<p>We have a simple idea.</p>
-<p>At the foundation of the Langlands Program is a <em>choice</em>: namely the supposition that the Laplace operator <span class="math inline">\(\Delta\)</span> on locally symmetric spaces is a geometric operator sufficient to correlate arithmetic. This choice, originating with Selberg <span class="citation" data-cites="selberg1956harmonic">(<a href="#ref-selberg1956harmonic" role="doc-biblioref">Selberg 1956</a>)</span>, is historic and noncanonical. Prior to Selberg and Hans Maass [ref], the classical modular forms were typically assumed to be holomorphic [ref]. However the Laplace operator does have one interesting property: that eigenfunctions of the Laplacian are <em>unitary irreducible characters</em> of <span class="math inline">\(G(\bf{R})\)</span>. Consequently the spectrum of the Laplacian gives us a decompsition of <span class="math inline">\(L^2(\Gamma \backslash G)\)</span> into irreducible automorphic representations.</p>
-<p>In this brief article we emphasize other choices. In particular we emphasize the Steklov and Robin operators on maximal <span class="math inline">\(\bf{Q}\)</span>-rational excision models <span class="math inline">\(X[t], \del X[t]\)</span> instead of the Laplace spectrum on <span class="math inline">\(X\)</span>.</p>
-<section id="spectra-and-langlands" class="level2">
-<h2 class="anchored" data-anchor-id="spectra-and-langlands">Spectra and Langlands</h2>
-<p>How to introduce the Langlands program? The program is a functor to classify linear representations of the absolute Galois group <span class="math inline">\(Gal(\bQ)\)</span> in correspondance with automorphic representations on locally symmetric spaces <span class="math inline">\(L^2(\Gamma \backslash X)\)</span>. The program predicts that irreducible representations of <span class="math inline">\(Gal\)</span> are in correspondance with cuspidal automorphic representations (supported on the interior), and that reducible representations of <span class="math inline">\(Gal\)</span> are in correspondance with induced boundary parabolic representations. Compare J. Arthurs’ comment on Langlands and relative trace formulas <span class="citation" data-cites="arthur2005introduction arthur2007very">(<a href="#ref-arthur2005introduction" role="doc-biblioref">Arthur 2005</a>, <a href="#ref-arthur2007very" role="doc-biblioref">2007</a>)</span>.</p>
-<p>Recall that <span class="math inline">\(\Gamma \backslash X\)</span> is finite volume, having a canonical invariant volume measure <span class="math inline">\(\mu\)</span>. This measure <span class="math inline">\(\mu\)</span> is <span class="math inline">\(\Gamma\)</span>-invariant. The Laplacian <span class="math inline">\(\Delta\)</span> is [unique classification] of energy minimizing functions <span class="math inline">\(u\)</span> on <span class="math inline">\(X\)</span>. [Rayleigh quotients]. The noncompactness of <span class="math inline">\(\Gamma \backslash X\)</span> means the spectrum is unbounded. Historically the continuous (unbounded) part of the spectrum was discovered via Eisenstein series, with the discrete spectrum defined by bounded states (finite <span class="math inline">\(L^2\)</span> norm).</p>
-<p><em>Main Proposal:</em> We suggest replacing the noncompact <span class="math inline">\(X\)</span> with rational excisions <span class="math inline">\(X[t] \subset X\)</span> such that <span class="math inline">\(\Gamma \backslash X[t] \hookrightarrow \Gamma \backslash X\)</span> is <em>compact</em>. These rational excisions <span class="math inline">\(X[t]\)</span> are explicit models of the maximal <span class="math inline">\(\bf{Q}\)</span>-rational Borel-Serre bordification of <span class="math inline">\(X\)</span>. Compare <span class="citation" data-cites="borel1973corners">(<a href="#ref-borel1973corners" role="doc-biblioref">Borel and Serre 1973</a>)</span>. The excisions <span class="math inline">\(X[t]\)</span> are defined by excising rational horoballs at infinity.</p>
-<p>Our construction emphasizes that <span class="math inline">\(X[t]\)</span> is not obtained “at infinity” by adjoining parabolic cells (as per Borel-Serre’s original approach) but is more simply represented <em>inside</em> the initial symmetric space <span class="math inline">\(X[t] \subset X\)</span>. The construction of <span class="math inline">\(X[t]\)</span> via excisions of rational horoballs at-infinity implies <span class="math inline">\(X[t] \subset X\)</span> has a <span class="math inline">\(\Gamma\)</span>-equivariant proper discontinuous boundary <span class="math inline">\(Y := \partial X[t]\)</span>.</p>
-<p>The key property of the rational bordification is that the reduced integral homology of <span class="math inline">\(Y\)</span> when considered as a <span class="math inline">\(\bf{Z} \Gamma\)</span>-module is the Bieri-Eckmann homological dualizing module <span class="citation" data-cites="BieriEckmann1973">(<a href="#ref-BieriEckmann1973" role="doc-biblioref">Bieri and Eckmann 1973</a>)</span>. The rational excision <span class="math inline">\(X[t]\)</span> is a model of <span class="math inline">\(E\Gamma\)</span> which also satisfies Poincare-Bieri-Eckmann duality with respect to the dualizing module. This is the basis of Borel-Serre’s proof of the virtual cohomological dimension of <span class="math inline">\(\Gamma\)</span>.</p>
-<p>Thus we propose replacing the spectrum of the Laplacian on noncompact <span class="math inline">\(\Gamma \backslash X\)</span> with the spectrum of the Steklov operator on the bordification <span class="math inline">\(X[t]\)</span> with boundary <span class="math inline">\(Y=\partial X[t]\)</span>. The Steklov operator is a <em>compact</em> self-adjoint positive semidefinite operator on <span class="math inline">\(L^2(Y)\)</span>. This implies the Steklov spectrum is discrete, accumulating only at <span class="math inline">\(+\infty\)</span>. Therefore we find by using the Steklov spectrum we avoid all technical difficulties of continuous and discrete spectra, and we have as foundation the discrete Steklov spectrum on <span class="math inline">\(X[t], \partial X[t]\)</span>.</p>
-<p>The Steklov spectrum affords many further simplifications as indicated below.</p>
+<section id="navier-meets-weber-a-new-classical-fluid-model" class="level2">
+<h2 class="anchored" data-anchor-id="navier-meets-weber-a-new-classical-fluid-model">Navier meets Weber: A New Classical Fluid Model</h2>
+<p>We argue the classical Navier-Stokes Equation is an inaccurate model for fluid dynamics, and we suggest instead the replacement of Navier-Stokes with the study of Navier-Weber equations <span class="math display">\[\rho \left( \frac{\partial u_i}{\partial t} + u_j \frac{\partial u_i}{\partial x_j} \right) = P_i - \frac{\partial p}{\partial x_i} + \frac{\partial \sigma^{\text{Weber}}_{ij}}{\partial x_j}, \]</span> where <span class="math display">\[\sigma_{ij} =   \mathbb{T}_{ij}^{\text{non-linear}} + \mathbb{V}_{ij}^{\text{viscoelastic}}.\]</span></p>
+<p>These equations are derived directly from the Conservation of Energy <span class="math inline">\(\delta T  = \delta W = -\delta U\)</span> where <span class="math inline">\(U\)</span> is Weber’s electrodynamic potential.</p>
+<p>The derivation of Navier-Weber equation follows Navier’s original argument, replacing Navier’s force <span class="math inline">\(f(r)V\)</span> with Weber’s electrodynamic force law.</p>
 </section>
-<section id="robin-spectrum-a-more-convenient-choice" class="level2">
-<h2 class="anchored" data-anchor-id="robin-spectrum-a-more-convenient-choice">Robin Spectrum: A More Convenient Choice</h2>
-<p>Further reflection actually suggests that Robin operators <span class="math inline">\(\Delta_\alpha:=DN + \alpha \Delta\)</span> relative to a parameter <span class="math inline">\(\alpha \in \bf{R}\)</span> has similar advantages to the Steklov operator. In fact the Robin operator is known to have discrete spectrum for compact Lipschitz domains (as satisfied by the rational excisions) for all parameters <span class="math inline">\(\alpha\)</span>. In the limit <span class="math inline">\(\alpha \to +\infty\)</span> we obtain the classical Laplacian, whereas the Steklov spetrum is recovered as the values of <span class="math inline">\(\alpha\)</span> for which the Robin operator <span class="math inline">\(\Delta_\alpha\)</span> has eigenvalue <span class="math inline">\(\lambda =0\)</span>.</p>
-<p>This Robin operator is a natural interpolation of the Dirichlet-to-Neumann operator and the Laplacian.</p>
+<section id="fluids-are-conservative-not-dissipative" class="level2">
+<h2 class="anchored" data-anchor-id="fluids-are-conservative-not-dissipative">Fluids are Conservative not Dissipative</h2>
+<p>Our derivation replaces Navier’s dissipative viscosity term <span class="math inline">\(\epsilon \Delta u = \epsilon \nabla \cdot (\nabla u)\)</span> with a conservative strain tensor <span class="math inline">\(\sigma\)</span>. Indeed we argue that “viscous dissipation”, a standard assumption in the classical Navier-Stokes equation, is erroneous. Our fundamental premise is that fluids are conservative and not dissipative.</p>
+<p>Classical fluid equations treat the kinetic energy of flow (<span class="math inline">\(\iiint \frac{1}{2} \rho u_i^2 dV\)</span> and viscous deformation rates as independant and separate physical quantities. However in the Weber-Navier equations, these quantities become equivalent, and the rate-of-deformation tensor (measuring the fluid’s internal shear resistance) is precisely the macroscopic equivalent to the fluid’s microscopic relative kinetic energy.</p>
+<p>Under the classical Navier-Stokes interpretation, viscous shear resistance is dissipative, with mechanical energy converted immediately and irreversibly into heat. In the Navier-Weber framework, the microscopic relative kinetic energy is stored directly within the velocity-dependent potential energy of the electrical particles, and strict energy conservation is maintained. Again, we argue fluids are conservative, not dissipative.</p>
+<p>The Navier-Weber equations imply the following viewpoints:</p>
+<ul>
+<li>that viscosity is the macroscopic manifestation of direct, pairwise, velocity-dependent forces opposing relative motion.</li>
+<li>that elasticity is not the strain of a continuous field, but the direct, instantaneous inertial resistance of particle pairs to relative acceleration.</li>
+<li>that viscoelastic memory is the direct result of energy being stored conservatively in the relational states (<span class="math inline">\(V_{ij}^2\)</span>) of the particle pairs and subsequently released back into the macroscopic flow.</li>
+<li>that energy-conserving hysteresis exists in fluids when subjected to cyclic loading and unloading.</li>
+</ul>
 </section>
-<section id="steklov-selberg-trace-formula" class="level2">
-<h2 class="anchored" data-anchor-id="steklov-selberg-trace-formula">Steklov-Selberg Trace Formula</h2>
-<p>The idea naturally suggests a Steklov-Selberg trace formula on <span class="math inline">\(X[t]\)</span> analogous to <span class="citation" data-cites="selberg1956harmonic">(<a href="#ref-selberg1956harmonic" role="doc-biblioref">Selberg 1956</a>)</span>.</p>
-<p><em>Claim:</em> There exists a Poisson kernel <span class="math inline">\(P(x,y)\)</span> and Poisson integral formula describing all harmonic extensions <span class="math inline">\(\hat{f}\)</span> of bounded functions <span class="math inline">\(f\)</span> defined on <span class="math inline">\(Y:=\partial X[t]\)</span>. The Steklov operator, also called the Dirichlet-to-Neumann map in the literature, is obtained by differentiation, and we have <span class="math display">\[Sf(x):=\int_Y f(y) \frac{\partial P}{\partial \nu}(x,y) dy\]</span> for all <span class="math inline">\(x\in X[t]\)</span>.</p>
-<p><em>Claim:</em> The Steklov operator <span class="math inline">\(S\)</span> has discrete countable spectrum and the spectral trace defined by the sum of eigenvalues <span class="math inline">\(\sum \lambda\)</span> converges absolutely.</p>
-<p><em>Claim:</em> The kernel <span class="math inline">\(k(x,y):= \frac{\partial P}{\partial \nu}(x,y)\)</span> is absolutely integrable modulo <span class="math inline">\(\Gamma\)</span> and the geometric trace defined by integration along the diagonal <span class="math inline">\(\int_Y k(y,y) dy\)</span> converges absolutely modulo <span class="math inline">\(\Gamma\)</span>.</p>
-<p><em>Claim:</em> The spectral trace is equal to the geometric trace, and the geometric trace can be decomposed into a recursive sum of orbital-type integrals over conjugacy classes following Selberg.</p>
-<p>At this point we are ill-equipped to expand the number-theoretic implications of the Selberg-Steklov trace formula. However it’s clear that Steklov eigenfunctions are not cuspidal in the classic sense, since Steklov eigenfunctions are supported on the boundary, and not concentrated in the interior. In fact the Steklov spectrum annihalates all cuspidal forms (concentrated in the interior). This elimination of cuspidal forms allows for significant simplifications.</p>
+<section id="uniqueness-existence-of-smooth-solutions-given-smooth-initial-datum" class="level2">
+<h2 class="anchored" data-anchor-id="uniqueness-existence-of-smooth-solutions-given-smooth-initial-datum">Uniqueness, Existence of Smooth Solutions given Smooth Initial Datum?</h2>
 </section>
-<section id="steklov-fundamental-lemma" class="level2">
-<h2 class="anchored" data-anchor-id="steklov-fundamental-lemma">Steklov Fundamental Lemma</h2>
-<p>Ngo Bao Chau’s Fundamental Lemma becomes almost trivial in the Steklov setting. The Steklov transfer factor is a homothety factor of rational horospheres, depending on direct <span class="math inline">\(p\)</span>-adic integration. By contrast the transfer factors in the classical Fundamental Lemma require complex computations over Hitchin fibrations.</p>
-<p>[To Be Continued - JHM]</p>
-
+<section id="finite-time-blow-ups" class="level2">
+<h2 class="anchored" data-anchor-id="finite-time-blow-ups">Finite-Time Blow-Ups?</h2>
 
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-arthur2005introduction" class="csl-entry" role="listitem">
-Arthur, James. 2005. <span>“An Introduction to the Trace Formula.”</span> <em>Harmonic Analysis, the Trace Formula, and Shimura Varieties</em> 4: 1–263.
-</div>
-<div id="ref-arthur2007very" class="csl-entry" role="listitem">
-———. 2007. <span>“A (Very Brief) History of the Trace Formula.”</span> <em>Newslett. Pac. Inst. Math. Sci.</em> 10: 8–11.
-</div>
-<div id="ref-BieriEckmann1973" class="csl-entry" role="listitem">
-Bieri, Robert, and Beno Eckmann. 1973. <span>“Groups with Homological Duality Generalizing <span>P</span>oincar<span>é</span> Duality.”</span> <em>Inventiones Mathematicae</em> 20 (2): 103–24. <a href="https://doi.org/10.1007/bf01404060">https://doi.org/10.1007/bf01404060</a>.
-</div>
-<div id="ref-borel1973corners" class="csl-entry" role="listitem">
-Borel, Armand, and Jean-Pierre Serre. 1973. <span>“Corners and Arithmetic Groups.”</span> <em>Comment. Math. Helv</em> 48 (1): 436–91.
-</div>
-<div id="ref-selberg1956harmonic" class="csl-entry" role="listitem">
-Selberg, Atle. 1956. <span>“Harmonic Analysis and Discontinuous Groups in Weakly Symmetric Spaces with Applications to Dirichlet Series.”</span> <em>J. Indian Math. Soc.</em> 20: 47–87.
-</div>
-</div></section></div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
