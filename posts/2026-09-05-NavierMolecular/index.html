@@ -8,9 +8,9 @@
 
 <meta name="author" content="JHM">
 <meta name="dcterms.date" content="2026-09-07">
-<meta name="description" content="We introduce the conservative Navier-Weber fluid model, based on Navier’s 1822 memoir and Weber’s electrodynamic force law. The Navier-Weber framework emphasizes that fluids are conservative and not dissipative. Navier-Weber also predicts fluids undergo energy-conserving hysteresis under cyclical loading and unloading. These are the low-hanging immediate fruits of the Navier-Weber intepretation.">
+<meta name="description" content="We introduce the conservative Navier-Weber fluid model, based on Navier’s 1822 memoir and Weber’s electrodynamic force law. The Navier-Weber framework emphasizes that fluids are conservative and not dissipative. Navier-Weber also predicts fluids undergo energy-conserving hysteresis under cyclical loading and unloading. The Navier-Weber equations are derived directly from Weber’s Relational Conservation of Energy, and provide the equivalence of relation kinetic energy rates with viscosity. The Navier-Weber equations replace the so-called viscosity tensor psilon div(grad u) (for incompressible fluids) in the classical Navier-Stokes equation with the non-linear and viscoelastic term T, V defined below. These are some of the immediate properties of the Navier-Weber intepretation.">
 
-<title>Introducing the Navier-Weber Equations – jhmlabs</title>
+<title>Introducing the Navier-Weber Fluid Equations – jhmlabs</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -146,10 +146,10 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Introducing the Navier-Weber Equations</h1>
+      <h1 class="title">Introducing the Navier-Weber Fluid Equations</h1>
                   <div>
         <div class="description">
-          We introduce the conservative Navier-Weber fluid model, based on Navier’s 1822 memoir and Weber’s electrodynamic force law. The Navier-Weber framework emphasizes that fluids are conservative and not dissipative. Navier-Weber also predicts fluids undergo energy-conserving hysteresis under cyclical loading and unloading. These are the low-hanging immediate fruits of the Navier-Weber intepretation.
+          We introduce the conservative Navier-Weber fluid model, based on Navier’s 1822 memoir and Weber’s electrodynamic force law. The Navier-Weber framework emphasizes that fluids are conservative and not dissipative. Navier-Weber also predicts fluids undergo energy-conserving hysteresis under cyclical loading and unloading. The Navier-Weber equations are derived directly from Weber’s Relational Conservation of Energy, and provide the equivalence of relation kinetic energy rates with viscosity. The Navier-Weber equations replace the so-called viscosity tensor psilon div(grad u) (for incompressible fluids) in the classical Navier-Stokes equation with the non-linear and viscoelastic term T, V defined below. These are some of the immediate properties of the Navier-Weber intepretation.
         </div>
       </div>
                 </div>
@@ -187,11 +187,11 @@ window.Quarto = {
 
 
 
-<p>We learned that Claude-Louis Navier assumed a molecular model of fluids in his 1822 memoir deriving the Navier-Stokes equations. We were intrigued by Navier’s hypotheses of forces which depend on radial distances and relative velocities <span class="math inline">\(F=f(r)V\)</span>. Of course this resonated with our continued study of Wilhelm Weber’s collected works, especially Weber’s final memoirs on solids, fluids, and gases. Thus we began a Gemini-assisted study of Navier’s original 1822 memoir in light of Weber’s electrodynamics.</p>
+<p>The begins with Claude-Louis Navier. We were surprised to learn that Navier assumed a molecular model of fluids in his 1822 memoir deriving the Navier-Stokes equations. We were intrigued by Navier’s hypotheses of forces which depend on radial distances and relative velocities <span class="math inline">\(F=f(r)V\)</span>. Of course this resonated with our continued study of Wilhelm Weber’s collected works, especially Weber’s final memoirs on solids, fluids, and gases. Thus we began a Gemini-assisted study of Navier’s original 1822 memoir in light of Weber’s electrodynamics. We had these ideas before learning about the OpenAI and Navier-Stokes controversy.</p>
 <section id="navier-meets-weber-a-new-classical-fluid-model" class="level2">
 <h2 class="anchored" data-anchor-id="navier-meets-weber-a-new-classical-fluid-model">Navier meets Weber: A New Classical Fluid Model</h2>
 <p>We argue the classical Navier-Stokes Equation is an inaccurate model for fluid dynamics, and suggest the replacement of Navier-Stokes with the study of Navier-Weber equations: <span class="math display">\[\rho \left( \frac{\partial u_i}{\partial t} + u_j \frac{\partial u_i}{\partial x_j} \right) = P_i - \frac{\partial p}{\partial x_i} + \frac{\partial \sigma^{\text{Weber}}_{ij}}{\partial x_j}, \]</span> where <span class="math display">\[\sigma_{ij} =   \mathbb{T}_{ij}^{\text{non-linear}} + \mathbb{V}_{ij}^{\text{viscoelastic}}.\]</span></p>
-<p>For completeness, we define:</p>
+<p>The visosity terms are defined as follows:</p>
 <p><span class="math display">\[\mathbb{T}_{ij}^{\text{non-linear}} = \nu_{\text{non}} \left[ \left( \frac{\partial u_k}{\partial x_l} \frac{\partial u_k}{\partial x_l} \right) \frac{\partial u_i}{\partial x_j} + \mathcal{C}_{ijklmn} \frac{\partial u_m}{\partial x_n} \frac{\partial u_p}{\partial x_q} \right]\]</span></p>
 <p>and</p>
 <p><span class="math display">\[\mathbb{V}_{ij}^{\text{viscoelastic}} = \eta_v \left[ \frac{\partial}{\partial t}\left(\frac{\partial u_i}{\partial x_j} + \frac{\partial u_j}{\partial x_i}\right) + u_k \frac{\partial}{\partial x_k}\left(\frac{\partial u_i}{\partial x_j}\right) + \text{coupling terms} \right].\]</span></p>
@@ -199,33 +199,34 @@ window.Quarto = {
 </section>
 <section id="fluids-are-conservative-not-dissipative" class="level2">
 <h2 class="anchored" data-anchor-id="fluids-are-conservative-not-dissipative">Fluids are Conservative not Dissipative</h2>
-<p>Our derivation replaces Navier’s dissipative viscosity term <span class="math inline">\(\epsilon \Delta u = \epsilon \nabla \cdot (\nabla u)\)</span> with a conservative strain tensor <span class="math inline">\(\sigma\)</span>. This follows from Weber’s electrodynamics being fundamentally conservative. Indeed we argue that “viscous dissipation”, a standard assumption in the classical Navier-Stokes equation, is erroneous. Navier-Weber viewpoint implies fluids are fundamentally conservative, not dissipative.</p>
+<p>Our derivation replaces Navier’s dissipative viscosity term <span class="math inline">\(\epsilon \Delta u = \epsilon \nabla \cdot (\nabla u)\)</span> with the conservative strain tensor <span class="math inline">\(\sigma^{\text{Weber}}=\mathbb{T}+\mathbb{V}\)</span> (nonlinear plus viscoelastic). This follows from Weber’s electrodynamics being fundamentally conservative. Indeed we argue that “viscous dissipation”, a standard assumption in the classical Navier-Stokes equation, is erroneous. This Navier-Weber viewpoint implies fluids are fundamentally conservative, not dissipative.</p>
 <p>There is another interesting consequence of the Navier-Weber equations, namely the equivalence of relational kinetic energy with viscosity. Classical fluid equations treat the kinetic energy of flow (<span class="math inline">\(\iiint \frac{1}{2} \rho u_i^2 dV\)</span> and viscous deformation rates as independant and separate physical quantities. However in the Weber-Navier equations, these quantities become equivalent: the rate-of-deformation tensor (measuring the fluid’s internal shear resistance) is precisely the macroscopic equivalent to the fluid’s microscopic relative kinetic energy.</p>
-<p>Under the classical Navier-Stokes interpretation, viscous shear resistance is dissipative, with mechanical energy converted immediately and irreversibly into heat. In the Navier-Weber framework, the microscopic relative kinetic energy is stored directly within the velocity-dependent potential energy of the electrical particles, and strict energy conservation is maintained.</p>
-<p>Again, we argue fluids are conservative, not dissipative.</p>
+<p>Under the classical Navier-Stokes interpretation, viscous shear resistance is dissipative, with mechanical energy converted immediately and irreversibly into heat. In the Navier-Weber framework, the microscopic relative kinetic energy is stored directly within the electrodynamic potential energy of the particles, and strict energy conservation is maintained. Again, we argue fluids are conservative, not dissipative.</p>
 <p>The Navier-Weber equations also imply the following viewpoints:</p>
 <ul>
-<li>that viscosity is the macroscopic manifestation of Weber’s radial velocity-dependant forces opposing relative motion;</li>
-<li>that elasticity is not the strain of a continuous field, but the direct, instantaneous inertial resistance of particle pairs to relative acceleration;</li>
+<li>that viscosity is the macroscopic effect of Weber electrodynamic forces opposing relative motion;</li>
+<li>that elasticity is not the strain of a continuous field, but the instantaneous inertial resistance of particle pairs to relative acceleration;</li>
 <li>that viscoelastic memory is the direct result of energy being stored conservatively in the relations of particle pairs and subsequently released back into the macroscopic flow;</li>
-<li>that fluids experience energy-conserving hysteresis when subjected to cyclic loading and unloading.</li>
+<li>that Navier-Weber fluids experience energy-conserving hysteresis when subjected to cyclic loading and unloading.</li>
 </ul>
 </section>
 <section id="current-research" class="level2">
 <h2 class="anchored" data-anchor-id="current-research">Current Research</h2>
-<p>The Navier-Weber viewpoint is not without controversy. We treat fluids as macroscopically electrically neutral, i.e.&nbsp;charges are balanced in any volume. This implies the electrostatic Coulomb force vanishes on macroscopic balls. This hypothesis however is probably not sufficient to distinguish fluid states from solid or gaseous states. Naively we assume a fluid consists of electrical molecules which are rotating around each other. There are certain integrals defining the stresses which diverge when integrated over noncompact domains (<span class="math inline">\(r\to +\infty\)</span>).</p>
+<p>The Navier-Weber viewpoint is not without controversy.</p>
+<p>Our discussion needs distinguish plasma gas, from plasma fluid, from electroneutral fluids.</p>
+<p>We treat fluids as macroscopically electrically neutral, i.e.&nbsp;charges are balanced in any volume. This implies the electrostatic Coulomb force vanishes on macroscopic balls. This hypothesis however is probably not sufficient to distinguish fluid states from solid or gaseous states. Naively we assume a fluid consists of electrical molecules which are rotating around each other. There are certain integrals defining the stresses which diverge when integrated over noncompact domains (<span class="math inline">\(r\to +\infty\)</span>).</p>
 </section>
 <section id="uniqueness-existence-of-smooth-solutions-given-smooth-initial-datum" class="level2">
 <h2 class="anchored" data-anchor-id="uniqueness-existence-of-smooth-solutions-given-smooth-initial-datum">Uniqueness, Existence of Smooth Solutions given Smooth Initial Datum?</h2>
-<p>The usual regularity theory would imply Uniqueness and Existence of Smooth Solutions given smooth initial datum if:</p>
+<p>Again the Navier-Weber equations are conservative Hamiltonian equations. Therefore we argue the a priori regularity theory of Navier-Weber solutions is substantially better than solutions of general dissipative equations like classical Navier-Stokes. Basically the experts already know all this. The usual regularity theory implies Uniqueness and Existence of Smooth Solutions given smooth initial datum if:</p>
 <ol type="1">
-<li><p>We establish an a priori bound on <span class="math inline">\(\nabla u\)</span>. In fact the Navier-Weber equations are a conservative Hamiltonian system, which implies that <span class="math inline">\(||\nabla u||_{L^2}\)</span> is bounded globally for all time <span class="math inline">\(t&gt;0\)</span>.</p></li>
-<li><p>The visoelastic tensor <span class="math inline">\(\mathbb{V}\)</span> is postive semidefinite for all time <span class="math inline">\(t &gt;0\)</span>. Positive semi-definiteness means the inductive resistance always opposes the change that produced it (a physical analogue to Lenz’s law). When a local region of fluid undergoes rapid acceleration, the reciprocal molecular forces generate an internal “added mass” or “inertial drag” that smooths out velocity fluctuations. This positive semidefiniteness prevents sharp gradient shocks from concentrating, and shields the fluid from finite-time singularities.</p></li>
+<li><p>We establish an a priori bound on <span class="math inline">\(\nabla u\)</span>. But in fact the Navier-Weber equations are a conservative Hamiltonian system, which implies that <span class="math inline">\(||\nabla u||_{L^2}\)</span> is bounded globally for all time <span class="math inline">\(t&gt;0\)</span>.</p></li>
+<li><p>The visoelastic tensor <span class="math inline">\(\mathbb{V}\)</span> is postive semidefinite for all time <span class="math inline">\(t &gt;0\)</span>. Positive semi-definiteness means the inductive resistance always opposes the change that produced it (physically analogue to Lenz’s law). When a local region of fluid undergoes rapid acceleration, the reciprocal molecular forces generate an internal “added mass” or “inertial drag” that smooths out velocity fluctuations. This positive semidefiniteness prevents sharp gradient shocks from concentrating onto finite-time singularities.</p></li>
 </ol>
 </section>
 <section id="finite-time-blow-ups" class="level2">
 <h2 class="anchored" data-anchor-id="finite-time-blow-ups">Finite-Time Blow-Ups?</h2>
-<p>At high energies, we expect existence of finite-time blowups, especially when critical radii <span class="math inline">\(r&lt;r_c\)</span> are breeched and charges are “flashing” through the critical radius.</p>
+<p>At high energies <span class="math inline">\(r &gt; r_c\)</span> or <span class="math inline">\(E &gt; \mu c^2\)</span> we expect existence of finite-time blowups, especially when critical radii <span class="math inline">\(r&lt;r_c\)</span> are breeched and charges “flash” through the critical radius.</p>
 
 
 </section>
