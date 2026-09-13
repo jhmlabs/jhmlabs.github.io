@@ -23,7 +23,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -187,20 +207,21 @@ window.Quarto = {
 
 
 
-<p><strong>Goal:</strong> Prove the global smoothness of Navier-Weber solutions <span class="math inline">\(u(x,t)\)</span> assuming smooth initial conditions <span class="math inline">\(u(x,0)\)</span>.</p>
-<p>We recall Navier-Weber equations are a conservative Hamiltonian system. The experts have standard lines of attack for this question. We outline the standard arguments below. Here we admit the estimates depend on detailed Gemini notebook prompts.</p>
+<p>We continue to develop our ideas on Navier-Weber fluid equations based on Navier’s 1822 memoir <span class="citation" data-cites="navier">(<a href="#ref-navier" role="doc-biblioref">Navier 1823</a>)</span> and Weber’s electrodynamics <span class="citation" data-cites="weber2">(<a href="#ref-weber2" role="doc-biblioref">Weber 2021</a>)</span>.</p>
+<p>The purpose of this article is: <em>Prove the global smoothness of Navier-Weber solutions <span class="math inline">\(u(x,t)\)</span> assuming smooth initial conditions <span class="math inline">\(u(x,0)\)</span>.</em></p>
+<p>We recall Navier-Weber equations are a conservative Hamiltonian system. We outline the standard arguments below. Here we admit the estimates depend on detailed Gemini notebook prompts.</p>
 <p>For simplicity we assume <span class="math inline">\(\mu_0=0\)</span> zero classical viscosity, although the estimates continue to be valid if we assume <span class="math inline">\(\mu_0 \neq 0\)</span>.</p>
 <section id="standard-regularity-theory" class="level2">
 <h2 class="anchored" data-anchor-id="standard-regularity-theory">Standard Regularity Theory</h2>
 <p>The <span class="math inline">\(3D\)</span> incompressible Navier-Weber fluids equations are defined by <span class="math display">\[\rho \left( \frac{\partial u_i}{\partial t} + u_j \frac{\partial u_i}{\partial x_j} \right) = -\frac{\partial p}{\partial x_i} + \frac{\partial}{\partial x_j} \left( \mathbb{T}_{ij}^{\text{non-linear}} + \mathbb{V}_{ij}^{\text{viscoelastic}} \right).\]</span></p>
-<p>The equations defining <span class="math inline">\(\mathbb{T}\)</span> and <span class="math inline">\(\mathbb{V}\)</span> are derived from integrating Weber’s fundamental force law throughout the fluid continuum <span class="math display">\[{\mathbf{F}}=\frac{q_1q_2}{r^2} ( 1-\frac{V^2}{2c^2} + \frac{r \dot{V}}{c^2} )\]</span> between electric particles. This implies the nonlinear strain<span class="math inline">\(\mathbb{T}\)</span> scales with the cube of <span class="math inline">\(\nabla_x u\)</span>. When we integrate Weber’s <span class="math inline">\(r\dot{V}/c^2\)</span> over the volume and use integration by parts, then we obtain the viscoelastic tensor <span class="math display">\[{\mathbb{V}}_{ij}=\eta_v \left[ \frac{\partial}{\partial t}\left(\frac{\partial u_i}{\partial x_j} + \frac{\partial u_j}{\partial x_i}\right) + u_k \frac{\partial}{\partial x_k}\left(\frac{\partial u_i}{\partial x_j}\right) \right].\]</span> The viscoelastic tensor <span class="math inline">\(\mathbb{V}\)</span> scales with <span class="math inline">\(\eta_v \left[ \frac{\partial}{\partial t}(\nabla u) + u \cdot \nabla (\nabla u) \right]\)</span>. Here we have <span class="math inline">\(\mathbb{T}^{\text{non-linear}} \propto \nu_{\text{non}} (\nabla u)^3\)</span> and <span class="math inline">\(\mathbb{V}^{\text{viscoelastic}} \propto \eta_v \dot{V}\)</span>.</p>
+<p>The equations defining <span class="math inline">\(\mathbb{T}\)</span> and <span class="math inline">\(\mathbb{V}\)</span> are derived from integrating Weber’s fundamental force law <span class="citation" data-cites="weber2">(<a href="#ref-weber2" role="doc-biblioref">Weber 2021</a>)</span> throughout the fluid continuum <span class="math display">\[{\mathbf{F}}=\frac{q_1q_2}{r^2} ( 1-\frac{V^2}{2c^2} + \frac{r \dot{V}}{c^2} )\]</span> between electric particles. This implies the nonlinear strain<span class="math inline">\(\mathbb{T}\)</span> scales with the cube of <span class="math inline">\(\nabla_x u\)</span>. When we integrate Weber’s <span class="math inline">\(r\dot{V}/c^2\)</span> over the volume and use integration by parts, then we obtain the viscoelastic tensor <span class="math display">\[{\mathbb{V}}_{ij}=\eta_v \left[ \frac{\partial}{\partial t}\left(\frac{\partial u_i}{\partial x_j} + \frac{\partial u_j}{\partial x_i}\right) + u_k \frac{\partial}{\partial x_k}\left(\frac{\partial u_i}{\partial x_j}\right) \right].\]</span> The viscoelastic tensor <span class="math inline">\(\mathbb{V}\)</span> scales with <span class="math inline">\(\eta_v \left[ \frac{\partial}{\partial t}(\nabla u) + u \cdot \nabla (\nabla u) \right]\)</span>. Here we have <span class="math inline">\(\mathbb{T}^{\text{non-linear}} \propto \nu_{\text{non}} (\nabla u)^3\)</span> and <span class="math inline">\(\mathbb{V}^{\text{viscoelastic}} \propto \eta_v \dot{V}\)</span>.</p>
 <p>In our derivations we assume the fluid has zero linear viscosity, i.e.&nbsp;we assume <span class="math inline">\(\mu_0 \Delta=0\)</span> vanishes identically. This means our arguments are slightly modified from the usual Navier-Stokes approach. Indeed this is fundamental to our hypothesis that fluids are conservative, not dissipative.</p>
 </section>
 <section id="bkm-regularity-criterion" class="level2">
 <h2 class="anchored" data-anchor-id="bkm-regularity-criterion">BKM Regularity Criterion</h2>
-<p>The standard regularity theory depends on the Beale-Kato-Majda (BKM) Criterion. The following proposition is surely well-known to experts:</p>
-<p><em>Proposition:</em> Local smooth solutions <span class="math inline">\(u\in H^s\)</span> extend unique to global smooth solutions for any <span class="math inline">\(T&gt;0\)</span> if and only if the following integral converges for all <span class="math inline">\(T\)</span>:</p>
-<p><span class="math display">\[\int_0^T \Phi(t)dt = \int_0^T (||\nabla u(t)||_{L^\infty} + ||\nabla u||^2_{L^\infty} + \frac{\eta_v}{\rho}||\nabla \dot{V}||_{L^\infty}
+<p>The standard regularity theory depends on the Beale-Kato-Majda (BKM) Criterion <span class="citation" data-cites="bkm">(<a href="#ref-bkm" role="doc-biblioref">Beale, Kato, and Majda 1984</a>)</span>. The following proposition is surely well-known to experts:</p>
+<p><strong>BKM Regularity Criterion:</strong> Local smooth solutions <span class="math inline">\(u\in H^s\)</span> extend unique to global smooth solutions for any <span class="math inline">\(T&gt;0\)</span> if and only if the following integral converges for all <span class="math inline">\(T\)</span>:</p>
+<p><span class="math display">\[\int_0^T \Phi(t)dt := \int_0^T (||\nabla u(t)||_{L^\infty} + ||\nabla u||^2_{L^\infty} + \frac{\eta_v}{\rho}||\nabla \dot{V}||_{L^\infty}) dt
 &lt; +\infty.
 \]</span></p>
 <p>One finds Gronwall’s inequality has the form <span class="math display">\[\mathscr{E}_s(T) \leq \mathscr{E}_s(0) \exp(C \int_0^T \Phi(t) dt).\]</span> If the integral <span class="math inline">\(\int \Phi\)</span> converges, then the Sobolev energy <span class="math inline">\(\mathscr{E}_s(T)\)</span> is finite, and consequently <span class="math inline">\(|u(T)|_{H^s} \leq \sqrt{2 \mathscr{E}_s(T)} &lt; +\infty\)</span>. This implies no finite-time blow-up occurs.</p>
@@ -223,17 +244,17 @@ window.Quarto = {
 <section id="estimate-b" class="level3">
 <h3 class="anchored" data-anchor-id="estimate-b">Estimate B</h3>
 <p>We estimate the second term in the BKM Criterion.</p>
-<p><em>Lemma:</em> Sobolev inequalities imply <span class="math display">\[\mathbf{\|\nabla u(t)\|_{L^\infty}^2 \le C_{\text{Agmon}}^2 \|\nabla u(t)\|_{L^2} \|D^3 u(t)\|_{L^2}}\]</span></p>
+<p><em>Lemma:</em> Sobolev inequalities imply <span class="math display">\[\|\nabla u(t)\|_{L^\infty}^2 \le C_{\text{Agmon}}^2 \|\nabla u(t)\|_{L^2} \|D^3 u(t)\|_{L^2}\]</span></p>
 <p>Define the dissipation functional <span class="math inline">\(\mathscr{D}_2(u)\)</span> by the formula <span class="math display">\[\mathscr{D}_2(u) = \nu_{\text{non}} \int |\nabla u(x,t)|^2 \left| D^{3} u(x,t) \right|^2 dx.\]</span> Obviously <span class="math inline">\(\mathscr{D}_2 \geq 0\)</span>.</p>
 <p>Holder’s Inequality implies <span class="math display">\[\|D^3 u(t)\|_{L^2}^2 = \int_{\mathbb{R}^3} |D^3 u|^2 dx \leq \left( \int_{\mathbb{R}^3} |\nabla u|^2 |D^3 u|^2 dx \right)^{1/2} \left( \int_{\mathbb{R}^3} \frac{|D^3 u|^2}{|\nabla u|^2} dx \right)^{1/2}.\]</span></p>
 <p>Gagliardo-Nirenberg interpolation inequalities imply:</p>
 <p><span class="math display">\[\|D^3 u(t)\|_{L^2} \leq \frac{C}{\nu_{\text{non}}^{1/4}} \left( \mathscr{D}_2(u(t)) \right)^{1/4} \|\nabla u(t)\|_{L^2}^{1/2}.\]</span></p>
 <p>Combining this expression with the above square Sobolev estimate, we obtain the inequality:</p>
-<p><span class="math display">\[\mathbf{\|\nabla u(t)\|_{L^\infty}^2 \le \frac{C_{\text{interp}}^2}{\nu_{\text{non}}^{1/4}} \left( \mathcal{D}_2(u(t)) \right)^{1/4} \|\nabla u(t)\|_{L^2(\mathbb{R}^3)}^{3/2}}.\]</span></p>
+<p><span class="math display">\[\|\nabla u(t)\|_{L^\infty}^2 \le \frac{C_{\text{interp}}^2}{\nu_{\text{non}}^{1/4}} \left( \mathcal{D}_2(u(t)) \right)^{1/4} \|\nabla u(t)\|_{L^2(\mathbb{R}^3)}^{3/2}.\]</span></p>
 <p>Integrating the above estimates and applying Holder inequality with conjugate exponents <span class="math inline">\(p=4\)</span>, <span class="math inline">\(q=4/3\)</span> yields:</p>
-<p><span class="math display">\[\int_0^T \left( \mathscr{D}_2(u(t)) \right)^{1/4} \|\nabla u(t)\|_{L^2}^{3/2} dt \le \mathbf{\left( \int_0^T \mathscr{D}_2(u(t)) \, dt \right)^{1/4} \left( \int_0^T \|\nabla u(t)\|_{L^2}^2 \, dt \right)^{3/4}}.\]</span></p>
-<p>Now we have <span class="math display">\[\int_0^T \mathcal{D}_2(u(t)) \, dt \le \mathcal{E}_2(0) &lt; \infty.\]</span></p>
-<p>Moreover we have <span class="math display">\[\int_0^T \|\nabla u(t)\|_{L^2}^2 \, dt \le T \sup_{t \in [0, T]} \|\nabla u(t)\|_{L^2}^2 \le C(\eta_v, \rho) \, T \, \mathcal{E}_2(0) &lt; \infty.\]</span></p>
+<p><span class="math display">\[\int_0^T \left( \mathscr{D}_2(u(t)) \right)^{1/4} \|\nabla u(t)\|_{L^2}^{3/2} dt \le \left( \int_0^T \mathscr{D}_2(u(t)) \, dt \right)^{1/4} \left( \int_0^T \|\nabla u(t)\|_{L^2}^2 \, dt \right)^{3/4}.\]</span></p>
+<p>Now we have <span class="math display">\[\int_0^T \mathcal{D}_2(u(t)) \, dt \le \mathcal{E}_2(0) &lt; +\infty.\]</span></p>
+<p>Moreover we have <span class="math display">\[\int_0^T \|\nabla u(t)\|_{L^2}^2 \, dt \le T \sup_{t \in [0, T]} \|\nabla u(t)\|_{L^2}^2 \le C(\eta_v, \rho) \, T \, \mathcal{E}_2(0) &lt; +\infty.\]</span></p>
 <p>Substituting these estimates into the Holder estimate yields:</p>
 <p><span class="math display">\[\int_0^T \|\nabla u(t)\|_{L^\infty}^2 dt \le \frac{C_{\text{interp}}^2}{\nu_{\text{non}}^{1/4}} \left( \mathcal{E}_2(0) \right)^{1/4} \left( C(\eta_v, \rho) \, T \, \mathcal{E}_2(0) \right)^{3/4}\]</span> which is equivalent to <span class="math display">\[\int_0^T \|\nabla u(t)\|_{L^\infty}^2 dt \leq \frac{C}{\nu_{non}^{1/4}} T^{3/4}  {\mathscr{E}}_2(0) &lt; +\infty.\]</span></p>
 </section>
@@ -257,14 +278,25 @@ window.Quarto = {
 </section>
 <section id="estimates-abc-implies-global-regularity-of-navier-weber-fluid-equations-according-to-bkm-criterion" class="level3">
 <h3 class="anchored" data-anchor-id="estimates-abc-implies-global-regularity-of-navier-weber-fluid-equations-according-to-bkm-criterion">Estimates A+B+C implies Global Regularity of Navier-Weber Fluid Equations According to BKM Criterion</h3>
-<p>The above estimates establish the regularity of incompressible Navier-Weber equations. These arguments are probably well-known to the experts.</p>
+<p>The above estimates establish the regularity of incompressible Navier-Weber equations.</p>
 <p>[-JHM]</p>
 
 
+
 </section>
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-bkm" class="csl-entry" role="listitem">
+Beale, J. Thomas, Tosio Kato, and Andrew Majda. 1984. <span>“Remarks on the Breakdown of Smooth Solutions for the 3D <span>Euler</span> Equations.”</span> <em>Communications in Mathematical Physics</em> 94 (1): 61–66.
+</div>
+<div id="ref-navier" class="csl-entry" role="listitem">
+Navier, Claude-Louis. 1823. <span>“M<span>é</span>moire Sur Les Lois Du Mouvement Des Fluides.”</span> <em>M<span>é</span>moires de l’Acad<span>é</span>mie Royale Des Sciences de l’Institut de France</em> 6: 389–440.
+</div>
+<div id="ref-weber2" class="csl-entry" role="listitem">
+Weber, Wilhelm. 2021. <em>Wilhelm Weber’s Main Works on Electrodynamics Translated into English: Volume 2: Weber’s Fundamental Force Law and the Theory of Electrodynamics</em>. Edited and translated by André Koch Torres Assis. Montreal: Apeiron.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
