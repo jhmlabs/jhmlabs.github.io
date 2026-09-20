@@ -8,7 +8,7 @@
 
 <meta name="author" content="JHM">
 <meta name="dcterms.date" content="2026-09-20">
-<meta name="description" content="Our goal is to introduce the Darcy-Weber pressure drop formulas and capacity tables based on the Navier-Weber fluid equations. These pressure drop and capacity formulas allow us to distinguish Navier-Weber from Navier-Stokes models of steady-state fluid flow, especially for ultracapillary flows. This means reviewing Poiseuille’s fundamental experiments. This implies new Darcy-Weber capacity tables which increasingly diverge from Navier-Stokes in certain physical regimes depending on Reynolds and Weber’s numbers Re and We.">
+<meta name="description" content="Our goal is to introduce the Darcy-Weber pressure drop formulas and capacity tables based on the Navier-Weber fluid equations. These pressure drop and capacity formulas distinguish Navier-Weber from Navier-Stokes models of steady-state fluid flow, especially for ultracapillary and high velocity flows. This means reviewing Hagen-Poiseuille’s analytical solution for Navier-Stokes. We generate new Darcy-Weber capacity tables which increasingly diverge from Navier-Stokes in certain physical regimes depending on Reynolds and Weber’s numbers Re and We.">
 
 <title>Navier-Weber Fluids: Darcy-Weber Pressure Drops and Capacities – jhmlabs</title>
 <style>
@@ -183,7 +183,7 @@ window.Quarto = {
       <h1 class="title">Navier-Weber Fluids: Darcy-Weber Pressure Drops and Capacities</h1>
                   <div>
         <div class="description">
-          Our goal is to introduce the Darcy-Weber pressure drop formulas and capacity tables based on the Navier-Weber fluid equations. These pressure drop and capacity formulas allow us to distinguish Navier-Weber from Navier-Stokes models of steady-state fluid flow, especially for ultracapillary flows. This means reviewing Poiseuille’s fundamental experiments. This implies new Darcy-Weber capacity tables which increasingly diverge from Navier-Stokes in certain physical regimes depending on Reynolds and Weber’s numbers Re and We.
+          Our goal is to introduce the Darcy-Weber pressure drop formulas and capacity tables based on the Navier-Weber fluid equations. These pressure drop and capacity formulas distinguish Navier-Weber from Navier-Stokes models of steady-state fluid flow, especially for ultracapillary and high velocity flows. This means reviewing Hagen-Poiseuille’s analytical solution for Navier-Stokes. We generate new Darcy-Weber capacity tables which increasingly diverge from Navier-Stokes in certain physical regimes depending on Reynolds and Weber’s numbers Re and We.
         </div>
       </div>
                 </div>
@@ -221,17 +221,17 @@ window.Quarto = {
 
 
 
-<p><em>(This post was difficult to write, requiring several numerical computations, experimental python scripts, and a study of the Reynolds and Weber numbers. To be continued… [-JHM])</em></p>
+<p><em>(This post was difficult to write, requiring several numerical computations, experimental python scripts, and a study of the Hagen-Poiseuille, Reynolds, and Weber numbers. The quantities <span class="math inline">\(\nu_{non}\)</span> need to be estimated, and we are still lacking the electrodynamic definition of viscous shear. Notice that viscosity <span class="math inline">\(\mu\)</span> enters through the boundary definition of <span class="math inline">\(\tau=-\mu \frac{du}{dr}|_{r=R}\)</span>. [-JHM])</em></p>
 <p>In this post we discuss pressure drops and capacity tables according to the Navier-Weber fluid equations. This provides experiments to distinguish Navier-Weber from the Navier-Stokes model, according to the accuracy of our pressure drop formulas given below.</p>
-<p>The standard method of computing pressure drops is through Darcy-Weisbach formula <span class="math inline">\(\Delta p = f_{DW} \frac{L}{D} \frac{\rho U^2}{2}\)</span>, where <span class="math inline">\(f_{DW}\)</span> is the Darcy-Weisbach factor.</p>
-<p>The factor <span class="math inline">\(f_{DW}\)</span> is not a simple constant, but is a dynamic factor depending on the physical parameters of the fluid flow. These physical parameters are defined by the dimensionless Navier-Stokes equation, e.g.&nbsp;Reynolds numbers <span class="math display">\[\text{Re}:=\rho U D/\mu.\]</span></p>
+<p>The standard method of computing pressure drops is through Darcy-Weisbach formula <span class="math display">\[\Delta p = f_{DW} \frac{L}{D} \frac{\rho U^2}{2},\]</span> where <span class="math inline">\(f_{DW}\)</span> is the Darcy-Weisbach factor.</p>
+<p>The factor <span class="math inline">\(f_{DW}\)</span> is not a simple constant, but is a dynamic factor depending on the physical parameters of the fluid flow. These physical parameters are defined by the dimensionless Navier-Stokes equation, e.g.&nbsp;Reynolds numbers <span class="math display">\[\text{Re}:=\frac{\rho U D}{\mu}.\]</span></p>
 <p>Our study of Navier-Weber implies the introduction of a new physical parameter we call Weber’s number <span class="math display">\[\text{We}:= \frac{16 \nu_{non} U^2}{\rho D^4}. \]</span></p>
-<p>The pressure drop formulas <span class="math inline">\(\Delta p\)</span> also generate relations between volumetric capacity <span class="math inline">\(Q\)</span> and the fluid parameters <span class="math inline">\(\Delta p\)</span>, <span class="math inline">\(\nu_{non}\)</span>, <span class="math inline">\(\rho\)</span>, diameter <span class="math inline">\(D\)</span>, length <span class="math inline">\(L\)</span>, <span class="math inline">\(f_{DW}\)</span>, etc.. These capacity relations will be described below. We also include python scripts which generate the capacities based on the various parameters.</p>
+<p>The pressure drop formulas <span class="math inline">\(\Delta p\)</span> also generate relations between volumetric capacity <span class="math inline">\(Q\)</span> and the fluid parameters <span class="math inline">\(\Delta p\)</span>, <span class="math inline">\(\nu_{non}\)</span>, <span class="math inline">\(\rho\)</span>, diameter <span class="math inline">\(D\)</span>, length <span class="math inline">\(L\)</span>, <span class="math inline">\(f_{DW}\)</span>, etc.. These capacity relations will be described below. We include python scripts below which generate the Darcy-Weber capacities as a function of the physical parameters.</p>
 <section id="assumptions-incompressible-steady-state-laminar-cylindrical-flow" class="level3">
 <h3 class="anchored" data-anchor-id="assumptions-incompressible-steady-state-laminar-cylindrical-flow">Assumptions: Incompressible Steady-State Laminar Cylindrical Flow</h3>
 <p>Throughout this post we consider fluids flowing at steady-state in a long transmission pipeline of diameter <span class="math inline">\(D\)</span> and length <span class="math inline">\(L\)</span>. Our derivations assume the fluid is modelled in cylindrical coordinates <span class="math inline">\((x,y,z) \mapsto (r, \theta, z)\)</span>, and satisfying the following assumptions:</p>
 <ul>
-<li>that viscosity and density are constant;</li>
+<li>that viscosity and density are constant ;</li>
 <li>that the flow has attained steady state <span class="math inline">\(\frac{\partial}{\partial t}=0\)</span>;</li>
 <li>that the flow is developed <span class="math inline">\(\frac{\partial v_z}{\partial z}=0\)</span>;</li>
 <li>that the flow is axisymmetric and parallel <span class="math inline">\(v_r=0\)</span>, <span class="math inline">\(v_\theta=0\)</span>, and <span class="math inline">\(v_z=v_z(r)\)</span> depends only on <span class="math inline">\(r\)</span>.</li>
@@ -239,9 +239,9 @@ window.Quarto = {
 </section>
 <section id="darcy-weisbach-pressure-drop-and-capacity-formulas" class="level2">
 <h2 class="anchored" data-anchor-id="darcy-weisbach-pressure-drop-and-capacity-formulas">Darcy-Weisbach Pressure Drop and Capacity Formulas</h2>
-<p>The usual capacity tables [insert] are based on the Darcy-Weisbach formulas for pressure drops in a cylindrical pipeline of diameter <span class="math inline">\(D\)</span> and length <span class="math inline">\(L\)</span>. Let <span class="math inline">\(U\)</span> be the fluid velocity, and let <span class="math inline">\(p\)</span> be the fluid pressure.</p>
+<p>The usual capacity tables <a href=""></a> are based on the Darcy-Weisbach formulas for pressure drops in a cylindrical pipeline of diameter <span class="math inline">\(D\)</span> and length <span class="math inline">\(L\)</span>. Let <span class="math inline">\(U\)</span> be the fluid velocity, and let <span class="math inline">\(p\)</span> be the fluid pressure.</p>
 <p>A basic force balance equation requires the existence of a wall strain <span class="math inline">\(\tau_W\)</span> satisfying <span class="math display">\[ (\frac{\pi D^2}{4})\Delta p  = (\pi D L) \tau_W.\]</span> This force balance equation implies <span class="math display">\[\Delta p = 4 \frac{L}{D} \tau.\]</span></p>
-<p>The standard approach normalizes <span class="math inline">\(\tau\)</span> against the bulk kinetic energy <span class="math inline">\(\rho U^2/2\)</span> of the fluid, and the Darcy-Weisbach factor <span class="math inline">\(f_{DW}\)</span> is defined by the expression <span class="math display">\[\tau:=\frac{1}{4}f_{DW}\frac{\rho U^2}{2}.\]</span> Here <span class="math inline">\(f_{DW}\)</span> is a factor depending on the material properties of the fluid. This implies the Darcy-Weisbach pressure drop formula <span class="math display">\[\Delta p = f_{DW} \frac{L}{D} \frac{\rho U^2}{2}.\]</span></p>
+<p>The Navier-Stokes definition of wall strain is based on Newtonian viscosity <span class="math inline">\(\tau(r)=-\frac{du}{dr}|_{r=R}\)</span>. The standard approach normalizes <span class="math inline">\(\tau\)</span> against the bulk kinetic energy <span class="math inline">\(\rho U^2/2\)</span> of the fluid, and the Darcy-Weisbach factor <span class="math inline">\(f_{DW}\)</span> is defined by the expression <span class="math display">\[\tau:=\frac{1}{4}f_{DW}\frac{\rho U^2}{2}.\]</span> Here <span class="math inline">\(f_{DW}\)</span> is a factor depending on the material properties of the fluid. This implies the Darcy-Weisbach pressure drop formula <span class="math display">\[\Delta p = f_{DW} \frac{L}{D} \frac{\rho U^2}{2}.\]</span></p>
 <section id="darcy-weisbach-factor-f_dw-and-normalization" class="level3">
 <h3 class="anchored" data-anchor-id="darcy-weisbach-factor-f_dw-and-normalization">Darcy-Weisbach factor <span class="math inline">\(f_{DW}\)</span> and Normalization</h3>
 <p>The Darcy-Weisbach formula is a general assumption for fluids of all regimes, turbulent or laminar. The Darcy-Weisbach factor <span class="math inline">\(f_{DW}\)</span> is a dimensionless factor. There is interesting dimensional argument for proving that <span class="math inline">\(f_{DW}\)</span> depends on two physical parameters, namely <span class="math inline">\(Re\)</span> and <span class="math inline">\(\epsilon/D\)</span> “wall roughness”. This is derived from the Navier-Stokes equation, by normalizing all the variables into dimensionless numbers. When we rewrite Navier-Stokes in dimensionless form, we see that <span class="math inline">\(\frac{1}{\text{Re}}\)</span> is the only parameter in the dimensionless equation.</p>
@@ -275,14 +275,15 @@ window.Quarto = {
 <p><span class="math display">\[Q=Q(\Delta p)=\pi D^3 \sqrt{\frac{2\mu}{3 \alpha_{non} \nu_{non}}} \sinh [\frac{1}{3} \text{arcsinh}(\frac{3\sqrt{6}D \Delta p}{256 L}\sqrt{\frac{\alpha_{non} \nu_{non}}{\mu^3}})]
 .\]</span></p>
 <p>Let <span class="math inline">\(\Omega\)</span> be defined as be the dimensionless Weber hydraulic parameter <span class="math display">\[\Omega:=\frac{\Delta p_{\text{Weber}}}{\Delta p_{\text{Poiseuille}}} =\frac{\text{We}}{1/\text{Re}} \cdot \left( \frac{\alpha_{\text{non}} \dot{\gamma}_w^2}{2} \right).\]</span></p>
-<p>Recall the Taylor expansions <span class="math inline">\(\text{arcsinh}(x) \approx x\)</span> and <span class="math inline">\(sinh(x) \approx x\)</span> for small <span class="math inline">\(x \approx 0\)</span>.</p>
+<p>Recall the Taylor expansions <span class="math inline">\(\text{arcsinh}(x) \approx x\)</span> and <span class="math inline">\(\sinh(x) \approx x\)</span> for small <span class="math inline">\(x \approx 0\)</span>.</p>
 <p>In the low pressure limit when <span class="math inline">\(\Omega &lt;&lt;1\)</span> the capacity formula becomes approximately <span class="math display">\[Q \approx \frac{\pi}{128} \frac{1}{\mu} \Delta p D^4.\]</span> This recovers the classical Hagen-Poiseuille capacity formula.</p>
 <p>In the high pressure limit where <span class="math inline">\(\Omega &gt;&gt;1\)</span>, then we approximate <span class="math inline">\(Q\)</span> using the asymptotic approximations of hyperbolic sine function, namely <span class="math display">\[\sinh(\frac{1}{3} \text{arcsinh}(\Omega)) \approx \frac{1}{2} (2\Omega)^{1/3}.\]</span></p>
-<p>This implies the approximation <span class="math display">\[ Q \approx \pi \frac{1}{256 \alpha_{non} \nu_{non}}^{1/3} D^{10/3} (\frac{\Delta p }{L})^{1/3}.\]</span> Therefore in the limit <span class="math inline">\(\Omega &gt;&gt;1\)</span> we find linear visocity <span class="math inline">\(\mu\)</span> cancels, and we recover Weber’s non-linear capacity formula.</p>
+<p>This implies the approximation <span class="math display">\[ Q \approx \pi (\frac{1}{256 \alpha_{non} \nu_{non}})^{1/3} D^{10/3} (\frac{\Delta p }{L})^{1/3}.\]</span> Therefore in the limit <span class="math inline">\(\Omega &gt;&gt;1\)</span> we find linear visocity <span class="math inline">\(\mu\)</span> cancels, and we recover Weber’s non-linear capacity formula.</p>
 </section>
-<section id="python-scripts-generate-capacity-tables" class="level2">
-<h2 class="anchored" data-anchor-id="python-scripts-generate-capacity-tables">Python Scripts: Generate Capacity Tables</h2>
-<div id="e0da38bd-3a71-4383-be80-3ea77fb9ab49" class="cell" data-execution_count="73">
+<section id="python-scripts-generating-darcy-weber-capacity-tables" class="level2">
+<h2 class="anchored" data-anchor-id="python-scripts-generating-darcy-weber-capacity-tables">Python Scripts Generating Darcy-Weber Capacity Tables</h2>
+<p>We use the arcsinh formula above to compute capacity <span class="math inline">\(Q\)</span> as a function of the physical parameters and pressure drop.</p>
+<div id="e0da38bd-3a71-4383-be80-3ea77fb9ab49" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#%run generate_capacity_tables-v1 --model compare --range ultracapillary --dp_percentage 10.0 --p_in_psi 14.7 --mu 1.8e-5 --nu_non 2.0e-8 --alpha_non 1.0 </span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#%run generate_capacity_tables-v1 --model compare --range pipeline --dp_percentage 10.0 --p_in_psi 1000 --mu 10e-5 --nu_non 2.0e-8 --alpha_non 1.0 </span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -299,7 +300,10 @@ window.Quarto = {
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>run generate_capacity_tables<span class="op">-</span>v1.py <span class="op">--</span>model compare <span class="op">--</span><span class="bu">range</span> capillary <span class="op">--</span>nu_non<span class="op">=</span><span class="fl">1.0e-11</span></span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n\n</span><span class="st"> Ultracapillary flows:"</span>)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>run generate_capacity_tables<span class="op">-</span>v1.py <span class="op">--</span>model compare <span class="op">--</span><span class="bu">range</span> ultracapillary <span class="op">--</span>dp_percentage <span class="fl">5.0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>run generate_capacity_tables<span class="op">-</span>v1.py <span class="op">--</span>model compare <span class="op">--</span><span class="bu">range</span> ultracapillary <span class="op">--</span>dp_percentage <span class="fl">5.0</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n\n</span><span class="st"> Poiseuille's experiment:"</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>run generate_capacity_tables<span class="op">-</span>v0 <span class="op">--</span>model compare <span class="op">--</span><span class="bu">range</span> capillary <span class="op">--</span>dp <span class="dv">1470</span>  <span class="op">--</span>mu <span class="fl">10e-3</span> <span class="op">--</span>nu_non <span class="fl">2.0e-8</span> <span class="op">--</span>alpha_non <span class="fl">1.0</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 
@@ -533,7 +537,55 @@ D = 2.5 um (0.0025mm)   36.2731  11.9745   7.3055   2.0990    1.1206
 D = 5 um (0.005mm)      57.9686  19.3913  11.9745   3.6805    2.0990
 D = 10 um (0.01mm)      92.4094  31.1680  19.3913   6.2079    3.6805
 D = 25 um (0.025mm)    170.7792  57.9687  36.2731  11.9745    7.3055
-======================================================================================================</code></pre>
+======================================================================================================
+
+
+ Poiseuille's experiment:
+====================================================================================================
+ CAPACITY &amp; WEBER PARAMETER ANALYSIS | MODEL: COMPARE | GEOMETRY: CAPILLARY | dp = 1470.0 psi
+ Physical Parameters: mu = 0.01 Pa*s | nu_non = 2e-08 Pa*s^3/m^2 | alpha_non = 1.0
+====================================================================================================
+
+--- 1A. Extended Navier-Weber Volumetric Capacity Q_Weber in CFM (ft^3/min) ---
+                         L = 1 cm      L = 5 cm     L = 10 cm     L = 50 cm       L = 1 m       L = 5 m
+D = 10 um (0.01mm)   7.916833e-09  4.139354e-09  2.951020e-09  9.714256e-10  5.147745e-10  1.053123e-10
+D = 25 um (0.025mm)  1.721621e-07  9.497940e-08  7.138600e-08  3.059236e-08  1.831702e-08  4.092526e-09
+D = 50 um (0.05mm)   1.754232e-06  9.895957e-07  7.598299e-07  3.688742e-07  2.447370e-07  6.434617e-08
+D = 100 um (0.1mm)   1.780213e-05  1.018015e-05  7.916833e-06  4.139354e-06  2.951020e-06  9.714256e-07
+D = 250 um (0.25mm)  3.795059e-04  2.192805e-04  1.721621e-04  9.497940e-05  7.138600e-05  3.059236e-05
+D = 500 um (0.5mm)   3.833959e-03  2.225247e-03  1.754232e-03  9.895957e-04  7.598299e-04  3.688742e-04
+D = 1000 um (1.0mm)  3.870012e-02  2.252487e-02  1.780213e-02  1.018015e-02  7.916833e-03  4.139354e-03
+
+--- 1B. Classical Hagen-Poiseuille Capacity Q_Navier in CFM (ft^3/min) ---
+                         L = 1 cm      L = 5 cm     L = 10 cm     L = 50 cm       L = 1 m       L = 5 m
+D = 10 um (0.01mm)   5.270885e-08  1.054177e-08  5.270885e-09  1.054177e-09  5.270885e-10  1.054177e-10
+D = 25 um (0.025mm)  2.058935e-06  4.117870e-07  2.058935e-07  4.117870e-08  2.058935e-08  4.117870e-09
+D = 50 um (0.05mm)   3.294269e-05  6.588539e-06  3.294269e-06  6.588539e-07  3.294269e-07  6.588539e-08
+D = 100 um (0.1mm)   5.270885e-04  1.054177e-04  5.270885e-05  1.054177e-05  5.270885e-06  1.054177e-06
+D = 250 um (0.25mm)  2.058935e-02  4.117870e-03  2.058935e-03  4.117870e-04  2.058935e-04  4.117870e-05
+D = 500 um (0.5mm)   3.294269e-01  6.588539e-02  3.294269e-02  6.588539e-03  3.294269e-03  6.588539e-04
+D = 1000 um (1.0mm)  5.270885e+00  1.054177e+00  5.270885e-01  1.054177e-01  5.270885e-02  1.054177e-02
+
+--- 2. Capacity Retained Ratio (Q_Weber / Q_Navier * 100%) ---
+                    L = 1 cm L = 5 cm L = 10 cm L = 50 cm L = 1 m L = 5 m
+D = 10 um (0.01mm)    15.02%   39.27%    55.99%    92.15%  97.66%  99.90%
+D = 25 um (0.025mm)    8.36%   23.07%    34.67%    74.29%  88.96%  99.38%
+D = 50 um (0.05mm)     5.33%   15.02%    23.07%    55.99%  74.29%  97.66%
+D = 100 um (0.1mm)     3.38%    9.66%    15.02%    39.27%  55.99%  92.15%
+D = 250 um (0.25mm)    1.84%    5.33%     8.36%    23.07%  34.67%  74.29%
+D = 500 um (0.5mm)     1.16%    3.38%     5.33%    15.02%  23.07%  55.99%
+D = 1000 um (1.0mm)    0.73%    2.14%     3.38%     9.66%  15.02%  39.27%
+
+--- 3. Dimensionless Weber Hydraulic Parameter Omega (Extra Drag Ratio dp_Weber_extra / dp_Navier) ---
+                     L = 1 cm L = 5 cm L = 10 cm L = 50 cm L = 1 m L = 5 m
+D = 10 um (0.01mm)     5.6578   1.5467    0.7861    0.0852  0.0239  0.0010
+D = 25 um (0.025mm)   10.9593   3.3355    1.8842    0.3460  0.1241  0.0062
+D = 50 um (0.05mm)    17.7790   5.6578    3.3355    0.7861  0.3460  0.0239
+D = 100 um (0.1mm)    28.6082   9.3552    5.6578    1.5467  0.7861  0.0852
+D = 250 um (0.25mm)   53.2530  17.7790   10.9593    3.3355  1.8842  0.3460
+D = 500 um (0.5mm)    84.9234  28.6081   17.7790    5.6578  3.3355  0.7861
+D = 1000 um (1.0mm)  135.1981  45.8006   28.6082    9.3552  5.6578  1.5467
+====================================================================================================</code></pre>
 </div>
 </div>
 
