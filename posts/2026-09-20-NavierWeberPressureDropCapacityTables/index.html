@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.3">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="JHM">
+<meta name="dcterms.date" content="2026-09-20">
+<meta name="description" content="Our goal is to introduce the Darcy-Weber pressure drop formulas and capacity tables based on the Navier-Weber fluid equations. These pressure drop and capacity formulas allow us to distinguish Navier-Weber from Navier-Stokes models of steady-state fluid flow, especially for ultracapillary flows. This means reviewing Poiseuille’s fundamental experiments. This implies new Darcy-Weber capacity tables which increasingly diverge from Navier-Stokes in certain physical regimes depending on Reynolds and Weber’s numbers Re and We.">
+
+<title>Navier-Weber Fluids: Darcy-Weber Pressure Drops and Capacities – jhmlabs</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../im1.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-81b5c3e63835cfde897ecd3d35a35a41.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-299fde5381b5a602aab895950093955a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">jhmlabs</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/_jhmlabs"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Navier-Weber Fluids: Darcy-Weber Pressure Drops and Capacities</h1>
+                  <div>
+        <div class="description">
+          Our goal is to introduce the Darcy-Weber pressure drop formulas and capacity tables based on the Navier-Weber fluid equations. These pressure drop and capacity formulas allow us to distinguish Navier-Weber from Navier-Stokes models of steady-state fluid flow, especially for ultracapillary flows. This means reviewing Poiseuille’s fundamental experiments. This implies new Darcy-Weber capacity tables which increasingly diverge from Navier-Stokes in certain physical regimes depending on Reynolds and Weber’s numbers Re and We.
+        </div>
+      </div>
+                </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>JHM </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">September 20, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p><em>(This post was difficult to write, requiring several numerical computations, experimental python scripts, and a study of the Reynolds and Weber numbers. To be continued… [-JHM])</em></p>
+<p>In this post we discuss pressure drops and capacity tables according to the Navier-Weber fluid equations. This provides experiments to distinguish Navier-Weber from the Navier-Stokes model, according to the accuracy of our pressure drop formulas given below.</p>
+<p>The standard method of computing pressure drops is through Darcy-Weisbach formula <span class="math inline">\(\Delta p = f_{DW} \frac{L}{D} \frac{\rho U^2}{2}\)</span>, where <span class="math inline">\(f_{DW}\)</span> is the Darcy-Weisbach factor.</p>
+<p>The factor <span class="math inline">\(f_{DW}\)</span> is not a simple constant, but is a dynamic factor depending on the physical parameters of the fluid flow. These physical parameters are defined by the dimensionless Navier-Stokes equation, e.g.&nbsp;Reynolds numbers <span class="math display">\[\text{Re}:=\rho U D/\mu.\]</span></p>
+<p>Our study of Navier-Weber implies the introduction of a new physical parameter we call Weber’s number <span class="math display">\[\text{We}:= \frac{16 \nu_{non} U^2}{\rho D^4}. \]</span></p>
+<p>The pressure drop formulas <span class="math inline">\(\Delta p\)</span> also generate relations between volumetric capacity <span class="math inline">\(Q\)</span> and the fluid parameters <span class="math inline">\(\Delta p\)</span>, <span class="math inline">\(\nu_{non}\)</span>, <span class="math inline">\(\rho\)</span>, diameter <span class="math inline">\(D\)</span>, length <span class="math inline">\(L\)</span>, <span class="math inline">\(f_{DW}\)</span>, etc.. These capacity relations will be described below. We also include python scripts which generate the capacities based on the various parameters.</p>
+<section id="assumptions-incompressible-steady-state-laminar-cylindrical-flow" class="level3">
+<h3 class="anchored" data-anchor-id="assumptions-incompressible-steady-state-laminar-cylindrical-flow">Assumptions: Incompressible Steady-State Laminar Cylindrical Flow</h3>
+<p>Throughout this post we consider fluids flowing at steady-state in a long transmission pipeline of diameter <span class="math inline">\(D\)</span> and length <span class="math inline">\(L\)</span>. Our derivations assume the fluid is modelled in cylindrical coordinates <span class="math inline">\((x,y,z) \mapsto (r, \theta, z)\)</span>, and satisfying the following assumptions:</p>
+<ul>
+<li>that viscosity and density are constant;</li>
+<li>that the flow has attained steady state <span class="math inline">\(\frac{\partial}{\partial t}=0\)</span>;</li>
+<li>that the flow is developed <span class="math inline">\(\frac{\partial v_z}{\partial z}=0\)</span>;</li>
+<li>that the flow is axisymmetric and parallel <span class="math inline">\(v_r=0\)</span>, <span class="math inline">\(v_\theta=0\)</span>, and <span class="math inline">\(v_z=v_z(r)\)</span> depends only on <span class="math inline">\(r\)</span>.</li>
+</ul>
+</section>
+<section id="darcy-weisbach-pressure-drop-and-capacity-formulas" class="level2">
+<h2 class="anchored" data-anchor-id="darcy-weisbach-pressure-drop-and-capacity-formulas">Darcy-Weisbach Pressure Drop and Capacity Formulas</h2>
+<p>The usual capacity tables [insert] are based on the Darcy-Weisbach formulas for pressure drops in a cylindrical pipeline of diameter <span class="math inline">\(D\)</span> and length <span class="math inline">\(L\)</span>. Let <span class="math inline">\(U\)</span> be the fluid velocity, and let <span class="math inline">\(p\)</span> be the fluid pressure.</p>
+<p>A basic force balance equation requires the existence of a wall strain <span class="math inline">\(\tau_W\)</span> satisfying <span class="math display">\[ (\frac{\pi D^2}{4})\Delta p  = (\pi D L) \tau_W.\]</span> This force balance equation implies <span class="math display">\[\Delta p = 4 \frac{L}{D} \tau.\]</span></p>
+<p>The standard approach normalizes <span class="math inline">\(\tau\)</span> against the bulk kinetic energy <span class="math inline">\(\rho U^2/2\)</span> of the fluid, and the Darcy-Weisbach factor <span class="math inline">\(f_{DW}\)</span> is defined by the expression <span class="math display">\[\tau:=\frac{1}{4}f_{DW}\frac{\rho U^2}{2}.\]</span> Here <span class="math inline">\(f_{DW}\)</span> is a factor depending on the material properties of the fluid. This implies the Darcy-Weisbach pressure drop formula <span class="math display">\[\Delta p = f_{DW} \frac{L}{D} \frac{\rho U^2}{2}.\]</span></p>
+<section id="darcy-weisbach-factor-f_dw-and-normalization" class="level3">
+<h3 class="anchored" data-anchor-id="darcy-weisbach-factor-f_dw-and-normalization">Darcy-Weisbach factor <span class="math inline">\(f_{DW}\)</span> and Normalization</h3>
+<p>The Darcy-Weisbach formula is a general assumption for fluids of all regimes, turbulent or laminar. The Darcy-Weisbach factor <span class="math inline">\(f_{DW}\)</span> is a dimensionless factor. There is interesting dimensional argument for proving that <span class="math inline">\(f_{DW}\)</span> depends on two physical parameters, namely <span class="math inline">\(Re\)</span> and <span class="math inline">\(\epsilon/D\)</span> “wall roughness”. This is derived from the Navier-Stokes equation, by normalizing all the variables into dimensionless numbers. When we rewrite Navier-Stokes in dimensionless form, we see that <span class="math inline">\(\frac{1}{\text{Re}}\)</span> is the only parameter in the dimensionless equation.</p>
+<p>Similarly we will find the Navier-Weber fluid equations and Darcy-Weber factor depends essentially on two physical factors, namely <span class="math inline">\(1/\text{Re}\)</span> Reynolds numbers and the Weber parameter <span class="math display">\[\text{We}:= \frac{16 \nu_{non} U^2}{\rho D^4}.\]</span> In dimensionless coordinates, the Darcy-Weber factor <span class="math inline">\(f_{DW}\)</span> is a function of <span class="math inline">\(\text{Re}, W\)</span> and satisfies <span class="math display">\[ f_{DW}(\text{Re}, W) = \frac{16}{\text{Re}} {\dot{\gamma}}^* + 4\alpha_{non} \frac{W}{\text{Re}} {{\dot{\gamma}}^*}^3.\]</span></p>
+</section>
+</section>
+<section id="darcy-weisbach-capacity-tables" class="level2">
+<h2 class="anchored" data-anchor-id="darcy-weisbach-capacity-tables">Darcy-Weisbach Capacity Tables</h2>
+<p>Let <span class="math inline">\(Q=U (\pi D^2/4)\)</span> be the volumetric flow capacity. Substituting <span class="math inline">\(Q\)</span> into the above equations yields the Darcy-Weisbach pressure drop formula: <span class="math display">\[ \Delta p = \frac{8}{\pi^2} f_{\text{DW}} \rho \frac{L}{D^5} Q^2. \]</span></p>
+<p>The pressure drop predicted by Darcy-Weisbach is assumed to be caused by the shear stresses and “friction” of the fluid along the surface of the pipe. The formula depends on the No-Slip boundary condition.</p>
+<p>The Darcy-Weisbach pressure drop formula gives the standard formula predicting the volumetric capacity <span class="math inline">\(Q\)</span> satisfying a given pressure drop <span class="math inline">\(\Delta p\)</span>. Rearranging for <span class="math inline">\(Q\)</span> yields:</p>
+<p><span class="math display">\[Q = \left( \frac{\pi^2 \Delta p}{8 \rho f_{DW}} \right)^{1/2} D^{5/2} L^{-1/2}\]</span></p>
+<p>This capacity formula directly generates the standard capacity tables in the codebooks [ref].</p>
+</section>
+<section id="steady-state-laminar-darcy-weber-pressure-drop-and-capacity-formulas" class="level2">
+<h2 class="anchored" data-anchor-id="steady-state-laminar-darcy-weber-pressure-drop-and-capacity-formulas">Steady-State Laminar Darcy-Weber Pressure Drop and Capacity Formulas</h2>
+<p>Our goal is to modify the Darcy-Weisbach formula to include Weberian effects. In the standard Navier-Stokes formulation, the viscosity is defined by the relation <span class="math inline">\(\tau(r)=-\mu \frac{du}{dr}\)</span>. For the Navier-Weber fluid model, we adapt <span class="math inline">\(\tau\)</span> to include Weber’s nonlinear shear-thickening term:</p>
+<p><span class="math display">\[\tau_w(r):=-\mu \frac{du}{dr} - \alpha_{non} \nu_{non} (\frac{du}{dr})^3.\]</span> We assume <span class="math inline">\(\mu&gt;0\)</span> and <span class="math inline">\(\nu_{non}&gt;0\)</span>.</p>
+<p>If we define <span class="math inline">\({\dot{\gamma}}(r) := -\frac{du}{dr}\)</span> as the strain rate, then the shear rate <span class="math inline">\(\dot{\gamma}\)</span> satisfies a cubic polynonial equation:</p>
+<p><span class="math display">\[ \dot{\gamma}^3 + (\frac{\mu}{\alpha_{non} \nu_{non}} \dot{\gamma} - \frac{\Delta p r}{2 \alpha_{non}\nu_{non} L}=0.\]</span></p>
+<p>We can actually solve for <span class="math inline">\(\dot{\gamma}\)</span> explicitly using Cardano’s closed-form solution. Ultimately we find the following Darcy-Weber pressure drop formula in steady-state laminar flows:</p>
+<p><span class="math display">\[\Delta p = 32 \mu \frac{L}{D^2} U + 4 \alpha_{non} \nu_{non} \frac{L}{D^4} U^3.\]</span></p>
+<p>The above formula immediately implies the existence of two pressure drop regimes:</p>
+<ul>
+<li>When <span class="math inline">\(r\to 0^+\)</span>, the linear Newtonian viscosity dominates <span class="math inline">\(\mu \dot{\gamma} \propto r\)</span>. Near the pipe centerline, the Newtonian terms dominate and we obtain the parabolic velocity scaling <span class="math inline">\(u(r) \approx u(0)-\frac{\Delta p}{4 \mu L}r^2\)</span>.</li>
+<li>When <span class="math inline">\(r\to R^-\)</span>, the nonlinear Weber shear-thickening term dominates near the boundary wall $ <em>{non} </em>{non} {}^3$, and the wall shear is blunted like <span class="math inline">\(r^{4/3}\)</span>.</li>
+</ul>
+<p>Recall the volumetric capacity <span class="math inline">\(Q\)</span> is defined by <span class="math inline">\(Q=\frac{4U}{\pi D^2}\)</span>. Substituting into the above pressure drop formula we obtain:</p>
+<p><span class="math display">\[\Delta p = \frac{128}{\pi} \mu \frac{L}{D^4}Q  + \frac{256}{\pi^3} \alpha_{non} \nu_{non} \frac{L}{D^{10}} Q^3.\]</span></p>
+<p>Now we want to solve the above cubic equation for <span class="math inline">\(Q\)</span> as a function of <span class="math inline">\(\Delta p\)</span>. We can directly solve for <span class="math inline">\(Q\)</span> using Cardano’s solution to the cubic. There is another interesting solution obtained by hyperbolic sine functions. Ultimately we find:</p>
+<p><span class="math display">\[Q=Q(\Delta p)=\pi D^3 \sqrt{\frac{2\mu}{3 \alpha_{non} \nu_{non}}} \sinh [\frac{1}{3} \text{arcsinh}(\frac{3\sqrt{6}D \Delta p}{256 L}\sqrt{\frac{\alpha_{non} \nu_{non}}{\mu^3}})]
+.\]</span></p>
+<p>Let <span class="math inline">\(\Omega\)</span> be defined as be the dimensionless Weber hydraulic parameter <span class="math display">\[\Omega:=\frac{\Delta p_{\text{Weber}}}{\Delta p_{\text{Poiseuille}}} =\frac{\text{We}}{1/\text{Re}} \cdot \left( \frac{\alpha_{\text{non}} \dot{\gamma}_w^2}{2} \right).\]</span></p>
+<p>Recall the Taylor expansions <span class="math inline">\(\text{arcsinh}(x) \approx x\)</span> and <span class="math inline">\(sinh(x) \approx x\)</span> for small <span class="math inline">\(x \approx 0\)</span>.</p>
+<p>In the low pressure limit when <span class="math inline">\(\Omega &lt;&lt;1\)</span> the capacity formula becomes approximately <span class="math display">\[Q \approx \frac{\pi}{128} \frac{1}{\mu} \Delta p D^4.\]</span> This recovers the classical Hagen-Poiseuille capacity formula.</p>
+<p>In the high pressure limit where <span class="math inline">\(\Omega &gt;&gt;1\)</span>, then we approximate <span class="math inline">\(Q\)</span> using the asymptotic approximations of hyperbolic sine function, namely <span class="math display">\[\sinh(\frac{1}{3} \text{arcsinh}(\Omega)) \approx \frac{1}{2} (2\Omega)^{1/3}.\]</span></p>
+<p>This implies the approximation <span class="math display">\[ Q \approx \pi \frac{1}{256 \alpha_{non} \nu_{non}}^{1/3} D^{10/3} (\frac{\Delta p }{L})^{1/3}.\]</span> Therefore in the limit <span class="math inline">\(\Omega &gt;&gt;1\)</span> we find linear visocity <span class="math inline">\(\mu\)</span> cancels, and we recover Weber’s non-linear capacity formula.</p>
+</section>
+<section id="python-scripts-generate-capacity-tables" class="level2">
+<h2 class="anchored" data-anchor-id="python-scripts-generate-capacity-tables">Python Scripts: Generate Capacity Tables</h2>
+<div id="e0da38bd-3a71-4383-be80-3ea77fb9ab49" class="cell" data-execution_count="73">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#%run generate_capacity_tables-v1 --model compare --range ultracapillary --dp_percentage 10.0 --p_in_psi 14.7 --mu 1.8e-5 --nu_non 2.0e-8 --alpha_non 1.0 </span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#%run generate_capacity_tables-v1 --model compare --range pipeline --dp_percentage 10.0 --p_in_psi 1000 --mu 10e-5 --nu_non 2.0e-8 --alpha_non 1.0 </span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n\n</span><span class="st"> Large-scale pipeline:"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>run generate_capacity_tables<span class="op">-</span>v1 <span class="op">--</span>model compare <span class="op">--</span><span class="bu">range</span> pipeline <span class="op">--</span>dp_percentage <span class="fl">10.0</span> <span class="op">--</span>p_in_psi <span class="dv">1000</span> </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n\n</span><span class="st"> Capillary, highly viscous:"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>run generate_capacity_tables<span class="op">-</span>v1.py <span class="op">--</span>model compare <span class="op">--</span><span class="bu">range</span> capillary <span class="op">--</span>mu <span class="fl">1.0e-3</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n\n</span><span class="st"> Low fractional pressure drop, creeping flow:"</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>run generate_capacity_tables<span class="op">-</span>v1.py <span class="op">--</span>model compare <span class="op">--</span><span class="bu">range</span> capillary <span class="op">--</span>dp_percentage <span class="fl">0.5</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n\n</span><span class="st"> Weak microscopic electrodynamic coupling:"</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>run generate_capacity_tables<span class="op">-</span>v1.py <span class="op">--</span>model compare <span class="op">--</span><span class="bu">range</span> capillary <span class="op">--</span>nu_non<span class="op">=</span><span class="fl">1.0e-11</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n\n</span><span class="st"> Ultracapillary flows:"</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>run generate_capacity_tables<span class="op">-</span>v1.py <span class="op">--</span>model compare <span class="op">--</span><span class="bu">range</span> ultracapillary <span class="op">--</span>dp_percentage <span class="fl">5.0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+
+ Large-scale pipeline:
+======================================================================================================
+ CAPACITY &amp; WEBER PARAMETER ANALYSIS | MODEL: COMPARE | GEOMETRY: PIPELINE
+ Rule: 10.0% Fractional Drop | p_in = 1000.0 psi =&gt; Calculated dp = 100.000 psi (689476.0 Pa)
+ Physical Parameters: mu = 1.8e-05 Pa*s | nu_non = 1.5e-08 Pa*s^3/m^2 | alpha_non = 1.0
+======================================================================================================
+
+--- 1A. Extended Navier-Weber Volumetric Capacity Q_Weber in CFM (ft^3/min) ---
+              L = 50 ft   L = 100 ft   L = 250 ft   L = 500 ft  L = 1000 ft
+D = 0.125"     0.071126     0.056393     0.041451     0.032798     0.025904
+D = 0.25"      0.717376     0.569004     0.418614     0.331609     0.262386
+D = 0.50"      7.233713     5.739007     4.224521     3.348910     2.652872
+D = 1.00"     72.930418    57.869704    42.613267    33.796170    26.791276
+D = 2.00"    735.214200   583.443341   429.722845   340.906139   270.369359
+D = 4.00"   7411.267221  5881.713598  4332.655730  3437.782757  2727.249115
+
+--- 1B. Classical Hagen-Poiseuille Capacity Q_Navier in CFM (ft^3/min) ---
+               L = 50 ft    L = 100 ft    L = 250 ft    L = 500 ft    L = 1000 ft
+D = 0.125"  1.328259e+01  6.641294e+00  2.656518e+00  1.328259e+00       0.664129
+D = 0.25"   2.125214e+02  1.062607e+02  4.250428e+01  2.125214e+01      10.626070
+D = 0.50"   3.400342e+03  1.700171e+03  6.800685e+02  3.400342e+02     170.017123
+D = 1.00"   5.440548e+04  2.720274e+04  1.088110e+04  5.440548e+03    2720.273976
+D = 2.00"   8.704877e+05  4.352438e+05  1.740975e+05  8.704877e+04   43524.383615
+D = 4.00"   1.392780e+07  6.963901e+06  2.785561e+06  1.392780e+06  696390.137847
+
+--- 2. Capacity Retained Ratio (Q_Weber / Q_Navier * 100%) ---
+           L = 50 ft L = 100 ft L = 250 ft L = 500 ft L = 1000 ft
+D = 0.125"     0.54%      0.85%      1.56%      2.47%       3.90%
+D = 0.25"      0.34%      0.54%      0.98%      1.56%       2.47%
+D = 0.50"      0.21%      0.34%      0.62%      0.98%       1.56%
+D = 1.00"      0.13%      0.21%      0.39%      0.62%       0.98%
+D = 2.00"      0.08%      0.13%      0.25%      0.39%       0.62%
+D = 4.00"      0.05%      0.08%      0.16%      0.25%       0.39%
+
+--- 3. Dimensionless Weber Hydraulic Parameter Omega (Extra Drag Ratio dp_Weber_extra / dp_Navier) ---
+            L = 50 ft L = 100 ft L = 250 ft L = 500 ft L = 1000 ft
+D = 0.125"   185.7485   116.7681    63.0880    39.4979     24.6381
+D = 0.25"    295.2483   185.7485   100.5358    63.0880     39.4979
+D = 0.50"    469.0688   295.2483   159.9812   100.5358     63.0880
+D = 1.00"    744.9916   469.0688   254.3453   159.9812    100.5358
+D = 2.00"   1182.9919   744.9916   404.1391   254.3453    159.9812
+D = 4.00"   1878.2741  1182.9919   641.9222   404.1391    254.3453
+======================================================================================================
+
+
+ Capillary, highly viscous:
+======================================================================================================
+ CAPACITY &amp; WEBER PARAMETER ANALYSIS | MODEL: COMPARE | GEOMETRY: CAPILLARY
+ Rule: 10.0% Fractional Drop | p_in = 30.0 psi =&gt; Calculated dp = 3.000 psi (20684.3 Pa)
+ Physical Parameters: mu = 0.001 Pa*s | nu_non = 1.5e-08 Pa*s^3/m^2 | alpha_non = 1.0
+======================================================================================================
+
+--- 1A. Extended Navier-Weber Volumetric Capacity Q_Weber in CFM (ft^3/min) ---
+                         L = 1 cm      L = 5 cm     L = 10 cm     L = 50 cm       L = 1 m       L = 5 m
+D = 10 um (0.01mm)   7.684579e-10  2.089608e-10  1.067456e-10  2.150708e-11  1.075606e-11  2.151375e-12
+D = 25 um (0.025mm)  1.996162e-08  7.317326e-09  4.021545e-09  8.387454e-10  4.199854e-10  8.403652e-11
+D = 50 um (0.05mm)   2.187481e-07  9.605635e-08  5.853816e-08  1.334306e-08  6.709909e-09  1.344494e-09
+D = 100 um (0.1mm)   2.318552e-06  1.142286e-06  7.684579e-07  2.089608e-07  1.067456e-07  2.150708e-08
+D = 250 um (0.25mm)  5.105885e-05  2.734370e-05  1.996162e-05  7.317326e-06  4.021545e-06  8.387454e-07
+D = 500 um (0.5mm)   5.230361e-04  2.898165e-04  2.187481e-04  9.605635e-05  5.853816e-05  1.334306e-05
+D = 1000 um (1.0mm)  5.325289e-03  3.012092e-03  2.318552e-03  1.142286e-03  7.684579e-04  2.089608e-04
+
+--- 1B. Classical Hagen-Poiseuille Capacity Q_Navier in CFM (ft^3/min) ---
+                         L = 1 cm      L = 5 cm     L = 10 cm     L = 50 cm       L = 1 m       L = 5 m
+D = 10 um (0.01mm)   1.075691e-09  2.151381e-10  1.075691e-10  2.151381e-11  1.075691e-11  2.151381e-12
+D = 25 um (0.025mm)  4.201908e-08  8.403817e-09  4.201908e-09  8.403817e-10  4.201908e-10  8.403817e-11
+D = 50 um (0.05mm)   6.722999e-07  1.344600e-07  6.722999e-08  1.344600e-08  6.722999e-09  1.344600e-09
+D = 100 um (0.1mm)   1.075691e-05  2.151381e-06  1.075691e-06  2.151381e-07  1.075691e-07  2.151381e-08
+D = 250 um (0.25mm)  4.201908e-04  8.403817e-05  4.201908e-05  8.403817e-06  4.201908e-06  8.403817e-07
+D = 500 um (0.5mm)   6.722999e-03  1.344600e-03  6.722999e-04  1.344600e-04  6.722999e-05  1.344600e-05
+D = 1000 um (1.0mm)  1.075691e-01  2.151381e-02  1.075691e-02  2.151381e-03  1.075691e-03  2.151381e-04
+
+--- 2. Capacity Retained Ratio (Q_Weber / Q_Navier * 100%) ---
+                    L = 1 cm L = 5 cm L = 10 cm L = 50 cm L = 1 m  L = 5 m
+D = 10 um (0.01mm)    71.44%   97.13%    99.23%    99.97%  99.99%  100.00%
+D = 25 um (0.025mm)   47.51%   87.07%    95.71%    99.81%  99.95%  100.00%
+D = 50 um (0.05mm)    32.54%   71.44%    87.07%    99.23%  99.81%   99.99%
+D = 100 um (0.1mm)    21.55%   53.10%    71.44%    97.13%  99.23%   99.97%
+D = 250 um (0.25mm)   12.15%   32.54%    47.51%    87.07%  95.71%   99.81%
+D = 500 um (0.5mm)     7.78%   21.55%    32.54%    71.44%  87.07%   99.23%
+D = 1000 um (1.0mm)    4.95%   14.00%    21.55%    53.10%  71.44%   97.13%
+
+--- 3. Dimensionless Weber Hydraulic Parameter Omega (Extra Drag Ratio dp_Weber_extra / dp_Navier) ---
+                    L = 1 cm L = 5 cm L = 10 cm L = 50 cm L = 1 m L = 5 m
+D = 10 um (0.01mm)    0.3998   0.0296    0.0077    0.0003  0.0001  0.0000
+D = 25 um (0.025mm)   1.1050   0.1485    0.0448    0.0020  0.0005  0.0000
+D = 50 um (0.05mm)    2.0734   0.3998    0.1485    0.0077  0.0020  0.0001
+D = 100 um (0.1mm)    3.6395   0.8834    0.3998    0.0296  0.0077  0.0003
+D = 250 um (0.25mm)   7.2295   2.0734    1.1050    0.1485  0.0448  0.0020
+D = 500 um (0.5mm)   11.8538   3.6395    2.0734    0.3998  0.1485  0.0077
+D = 1000 um (1.0mm)  19.1997   6.1425    3.6395    0.8834  0.3998  0.0296
+======================================================================================================
+
+
+ Low fractional pressure drop, creeping flow:
+======================================================================================================
+ CAPACITY &amp; WEBER PARAMETER ANALYSIS | MODEL: COMPARE | GEOMETRY: CAPILLARY
+ Rule: 0.5% Fractional Drop | p_in = 30.0 psi =&gt; Calculated dp = 0.150 psi (1034.2 Pa)
+ Physical Parameters: mu = 1.8e-05 Pa*s | nu_non = 1.5e-08 Pa*s^3/m^2 | alpha_non = 1.0
+======================================================================================================
+
+--- 1A. Extended Navier-Weber Volumetric Capacity Q_Weber in CFM (ft^3/min) ---
+                         L = 1 cm      L = 5 cm     L = 10 cm     L = 50 cm       L = 1 m       L = 5 m
+D = 10 um (0.01mm)   4.092838e-10  2.164074e-10  1.560025e-10  5.387800e-11  2.896617e-11  5.968064e-12
+D = 25 um (0.025mm)  8.878962e-09  4.926214e-09  3.722841e-09  1.646598e-09  1.008957e-09  2.315273e-10
+D = 50 um (0.05mm)   9.037851e-08  5.116004e-08  3.940944e-08  1.950014e-08  1.317269e-08  3.620735e-09
+D = 100 um (0.1mm)   9.165858e-07  5.252609e-07  4.092838e-07  2.164074e-07  1.560025e-07  5.387800e-08
+D = 250 um (0.25mm)  1.953019e-05  1.129739e-05  8.878962e-06  4.926214e-06  3.722841e-06  1.646598e-06
+D = 500 um (0.5mm)   1.972615e-04  1.145723e-04  9.037851e-05  5.116004e-05  3.940944e-05  1.950014e-05
+D = 1000 um (1.0mm)  1.990898e-03  1.159287e-03  9.165858e-04  5.252609e-04  4.092838e-04  2.164074e-04
+
+--- 1B. Classical Hagen-Poiseuille Capacity Q_Navier in CFM (ft^3/min) ---
+                         L = 1 cm      L = 5 cm     L = 10 cm     L = 50 cm       L = 1 m       L = 5 m
+D = 10 um (0.01mm)   2.988030e-09  5.976060e-10  2.988030e-10  5.976060e-11  2.988030e-11  5.976060e-12
+D = 25 um (0.025mm)  1.167197e-07  2.334394e-08  1.167197e-08  2.334394e-09  1.167197e-09  2.334394e-10
+D = 50 um (0.05mm)   1.867500e-06  3.734999e-07  1.867500e-07  3.734999e-08  1.867500e-08  3.734999e-09
+D = 100 um (0.1mm)   2.988030e-05  5.976060e-06  2.988030e-06  5.976060e-07  2.988030e-07  5.976060e-08
+D = 250 um (0.25mm)  1.167197e-03  2.334394e-04  1.167197e-04  2.334394e-05  1.167197e-05  2.334394e-06
+D = 500 um (0.5mm)   1.867500e-02  3.734999e-03  1.867500e-03  3.734999e-04  1.867500e-04  3.734999e-05
+D = 1000 um (1.0mm)  2.988030e-01  5.976060e-02  2.988030e-02  5.976060e-03  2.988030e-03  5.976060e-04
+
+--- 2. Capacity Retained Ratio (Q_Weber / Q_Navier * 100%) ---
+                    L = 1 cm L = 5 cm L = 10 cm L = 50 cm L = 1 m L = 5 m
+D = 10 um (0.01mm)    13.70%   36.21%    52.21%    90.16%  96.94%  99.87%
+D = 25 um (0.025mm)    7.61%   21.10%    31.90%    70.54%  86.44%  99.18%
+D = 50 um (0.05mm)     4.84%   13.70%    21.10%    52.21%  70.54%  96.94%
+D = 100 um (0.1mm)     3.07%    8.79%    13.70%    36.21%  52.21%  90.16%
+D = 250 um (0.25mm)    1.67%    4.84%     7.61%    21.10%  31.90%  70.54%
+D = 500 um (0.5mm)     1.06%    3.07%     4.84%    13.70%  21.10%  52.21%
+D = 1000 um (1.0mm)    0.67%    1.94%     3.07%     8.79%  13.70%  36.21%
+
+--- 3. Dimensionless Weber Hydraulic Parameter Omega (Extra Drag Ratio dp_Weber_extra / dp_Navier) ---
+                     L = 1 cm L = 5 cm L = 10 cm L = 50 cm L = 1 m L = 5 m
+D = 10 um (0.01mm)     6.3006   1.7615    0.9154    0.1092  0.0316  0.0013
+D = 25 um (0.025mm)   12.1456   3.7387    2.1352    0.4177  0.1568  0.0083
+D = 50 um (0.05mm)    19.6631   6.3006    3.7387    0.9154  0.4177  0.0316
+D = 100 um (0.1mm)    31.5996  10.3773    6.3006    1.7615  0.9154  0.1092
+D = 250 um (0.25mm)   58.7637  19.6631   12.1456    3.7387  2.1352  0.4177
+D = 500 um (0.5mm)    93.6712  31.5995   19.6631    6.3006  3.7387  0.9154
+D = 1000 um (1.0mm)  149.0846  50.5495   31.5996   10.3773  6.3006  1.7615
+======================================================================================================
+
+
+ Weak microscopic electrodynamic coupling:
+======================================================================================================
+ CAPACITY &amp; WEBER PARAMETER ANALYSIS | MODEL: COMPARE | GEOMETRY: CAPILLARY
+ Rule: 10.0% Fractional Drop | p_in = 30.0 psi =&gt; Calculated dp = 3.000 psi (20684.3 Pa)
+ Physical Parameters: mu = 1.8e-05 Pa*s | nu_non = 1e-11 Pa*s^3/m^2 | alpha_non = 1.0
+======================================================================================================
+
+--- 1A. Extended Navier-Weber Volumetric Capacity Q_Weber in CFM (ft^3/min) ---
+                         L = 1 cm      L = 5 cm     L = 10 cm     L = 50 cm       L = 1 m       L = 5 m
+D = 10 um (0.01mm)   1.236423e-08  6.142042e-09  4.164718e-09  1.156432e-09  5.923931e-10  1.194784e-10
+D = 25 um (0.025mm)  2.718121e-07  1.461633e-07  1.071362e-07  4.007668e-08  2.221754e-08  4.658404e-09
+D = 50 um (0.05mm)   2.782359e-06  1.545516e-06  1.169298e-06  5.205849e-07  3.206109e-07  7.404839e-08
+D = 100 um (0.1mm)   2.831588e-05  1.604006e-05  1.236423e-05  6.142042e-06  4.164718e-06  1.156432e-06
+D = 250 um (0.25mm)  6.049536e-04  3.477972e-04  2.718121e-04  1.461633e-04  1.071362e-04  4.007668e-05
+D = 500 um (0.5mm)   6.117342e-03  3.539454e-03  2.782359e-03  1.545516e-03  1.169298e-03  5.205849e-04
+D = 1000 um (1.0mm)  6.178541e-02  3.589109e-02  2.831588e-02  1.604006e-02  1.236423e-02  6.142042e-03
+
+--- 1B. Classical Hagen-Poiseuille Capacity Q_Navier in CFM (ft^3/min) ---
+                         L = 1 cm      L = 5 cm     L = 10 cm     L = 50 cm       L = 1 m       L = 5 m
+D = 10 um (0.01mm)   5.976060e-08  1.195212e-08  5.976060e-09  1.195212e-09  5.976060e-10  1.195212e-10
+D = 25 um (0.025mm)  2.334394e-06  4.668787e-07  2.334394e-07  4.668787e-08  2.334394e-08  4.668787e-09
+D = 50 um (0.05mm)   3.734999e-05  7.469999e-06  3.734999e-06  7.469999e-07  3.734999e-07  7.469999e-08
+D = 100 um (0.1mm)   5.976060e-04  1.195212e-04  5.976060e-05  1.195212e-05  5.976060e-06  1.195212e-06
+D = 250 um (0.25mm)  2.334394e-02  4.668787e-03  2.334394e-03  4.668787e-04  2.334394e-04  4.668787e-05
+D = 500 um (0.5mm)   3.734999e-01  7.469999e-02  3.734999e-02  7.469999e-03  3.734999e-03  7.469999e-04
+D = 1000 um (1.0mm)  5.976060e+00  1.195212e+00  5.976060e-01  1.195212e-01  5.976060e-02  1.195212e-02
+
+--- 2. Capacity Retained Ratio (Q_Weber / Q_Navier * 100%) ---
+                    L = 1 cm L = 5 cm L = 10 cm L = 50 cm L = 1 m L = 5 m
+D = 10 um (0.01mm)    20.69%   51.39%    69.69%    96.76%  99.13%  99.96%
+D = 25 um (0.025mm)   11.64%   31.31%    45.89%    85.84%  95.17%  99.78%
+D = 50 um (0.05mm)     7.45%   20.69%    31.31%    69.69%  85.84%  99.13%
+D = 100 um (0.1mm)     4.74%   13.42%    20.69%    51.39%  69.69%  96.76%
+D = 250 um (0.25mm)    2.59%    7.45%    11.64%    31.31%  45.89%  85.84%
+D = 500 um (0.5mm)     1.64%    4.74%     7.45%    20.69%  31.31%  69.69%
+D = 1000 um (1.0mm)    1.03%    3.00%     4.74%    13.42%  20.69%  51.39%
+
+--- 3. Dimensionless Weber Hydraulic Parameter Omega (Extra Drag Ratio dp_Weber_extra / dp_Navier) ---
+                    L = 1 cm L = 5 cm L = 10 cm L = 50 cm L = 1 m L = 5 m
+D = 10 um (0.01mm)    3.8333   0.9460    0.4349    0.0335  0.0088  0.0004
+D = 25 um (0.025mm)   7.5883   2.1942    1.1789    0.1650  0.0507  0.0022
+D = 50 um (0.05mm)   12.4239   3.8333    2.1942    0.4349  0.1650  0.0088
+D = 100 um (0.1mm)   20.1050   6.4514    3.8333    0.9460  0.4349  0.0335
+D = 250 um (0.25mm)  37.5880  12.4239    7.5883    2.1942  1.1789  0.1650
+D = 500 um (0.5mm)   60.0559  20.1049   12.4239    3.8333  2.1942  0.4349
+D = 1000 um (1.0mm)  95.7228  32.3011   20.1050    6.4514  3.8333  0.9460
+======================================================================================================
+
+
+ Ultracapillary flows:
+======================================================================================================
+ CAPACITY &amp; WEBER PARAMETER ANALYSIS | MODEL: COMPARE | GEOMETRY: ULTRACAPILLARY
+ Rule: 5.0% Fractional Drop | p_in = 14.7 psi =&gt; Calculated dp = 0.735 psi (5067.6 Pa)
+ Physical Parameters: mu = 1.8e-05 Pa*s | nu_non = 1.5e-08 Pa*s^3/m^2 | alpha_non = 1.0
+======================================================================================================
+
+--- 1A. Extended Navier-Weber Volumetric Capacity Q_Weber in CFM (ft^3/min) ---
+                           L = 1 mm      L = 5 mm      L = 1 cm      L = 5 cm     L = 10 cm
+D = 1 um (0.001mm)     7.180192e-13  4.062599e-13  3.128146e-13  1.543951e-13  1.040469e-13
+D = 2.5 um (0.0025mm)  1.534421e-11  8.816176e-12  6.886142e-12  3.691085e-12  2.696990e-12
+D = 5 um (0.005mm)     1.551800e-10  8.975164e-11  7.052893e-11  3.910149e-11  2.952848e-11
+D = 10 um (0.01mm)     1.567439e-09  9.103052e-10  7.180192e-10  4.062599e-10  3.128146e-10
+D = 25 um (0.025mm)    3.329427e-08  1.939763e-08  1.534421e-08  8.816176e-09  6.886142e-09
+
+--- 1B. Classical Hagen-Poiseuille Capacity Q_Navier in CFM (ft^3/min) ---
+                           L = 1 mm      L = 5 mm      L = 1 cm      L = 5 cm     L = 10 cm
+D = 1 um (0.001mm)     1.464135e-11  2.928269e-12  1.464135e-12  2.928269e-13  1.464135e-13
+D = 2.5 um (0.0025mm)  5.719264e-10  1.143853e-10  5.719264e-11  1.143853e-11  5.719264e-12
+D = 5 um (0.005mm)     9.150748e-09  1.830150e-09  9.150748e-10  1.830150e-10  9.150748e-11
+D = 10 um (0.01mm)     1.464135e-07  2.928269e-08  1.464135e-08  2.928269e-09  1.464135e-09
+D = 25 um (0.025mm)    5.719264e-06  1.143853e-06  5.719264e-07  1.143853e-07  5.719264e-08
+
+--- 2. Capacity Retained Ratio (Q_Weber / Q_Navier * 100%) ---
+                      L = 1 mm L = 5 mm L = 1 cm L = 5 cm L = 10 cm
+D = 1 um (0.001mm)       4.90%   13.87%   21.37%   52.73%    71.06%
+D = 2.5 um (0.0025mm)    2.68%    7.71%   12.04%   32.27%    47.16%
+D = 5 um (0.005mm)       1.70%    4.90%    7.71%   21.37%    32.27%
+D = 10 um (0.01mm)       1.07%    3.11%    4.90%   13.87%    21.37%
+D = 25 um (0.025mm)      0.58%    1.70%    2.68%    7.71%    12.04%
+
+--- 3. Dimensionless Weber Hydraulic Parameter Omega (Extra Drag Ratio dp_Weber_extra / dp_Navier) ---
+                       L = 1 mm L = 5 mm L = 1 cm L = 5 cm L = 10 cm
+D = 1 um (0.001mm)      19.3913   6.2079   3.6805   0.8966    0.4072
+D = 2.5 um (0.0025mm)   36.2731  11.9745   7.3055   2.0990    1.1206
+D = 5 um (0.005mm)      57.9686  19.3913  11.9745   3.6805    2.0990
+D = 10 um (0.01mm)      92.4094  31.1680  19.3913   6.2079    3.6805
+D = 25 um (0.025mm)    170.7792  57.9687  36.2731  11.9745    7.3055
+======================================================================================================</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/jhmlabs\.github\.io\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
